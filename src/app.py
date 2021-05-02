@@ -1,6 +1,8 @@
 import json
+import logging
 import os
 import schedule
+import time
 from article import Article
 from publication import Publication
 from pymongo import MongoClient, UpdateOne
@@ -11,33 +13,39 @@ with open("publications.json") as f:
 
 MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
 
-# Helper function to run multiple bulk write operations with one-time connection to database
-def insert_to_db(op_arr):
-    with MongoClient(MONGO_ADDRESS) as client:
-        db = client.microphone
-        result = db.publications.bulk_write(op_arr).bulk_api_result
-
-
-publications = []
+# Get serialized publications
+publications = [Publication(p).serialize() for p in publications_json]
 publication_upserts = [
     UpdateOne({"_id": p["_id"]}, {"$setOnInsert": p}, upsert=True) for p in publications
 ]
-insert_to_db(publication_upserts)
+# Add publications to db
+with MongoClient(MONGO_ADDRESS) as client:
+    db = client.microphone
+    result = db.publications.bulk_write(publication_upserts)
 
-
+# Fucntion for gathering articles for running with scheduler
 def gather_articles():
     articles = []
     for publication in publications_json:
-        pub = Publication(publication)
-        for entry in pub.get_feed():
+        p = Publication(publication)
+        for entry in p.get_feed():
             articles.append(Article(entry, publication["slug"]).serialize())
-        publications.append(pub.serialize())
 
     article_upserts = [
         UpdateOne({"articleUrl": a["articleUrl"]}, {"$setOnInsert": a}, upsert=True)
         for a in articles
     ]
-    insert_to_db(article_upserts)
+    # Add articles to db
+    with MongoClient(MONGO_ADDRESS) as client:
+        db = client.microphone
+        result = db.articles.bulk_write(article_upserts)
 
 
-schedule.every(2).hour.do(gather_articles)
+# Get initial refresh
+gather_articles()
+
+# Schedule the function to run every 1 hour
+schedule.every().hour.do(gather_articles)
+while True:
+    schedule.run_pending()
+    time.sleep(60)
