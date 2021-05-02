@@ -1,17 +1,21 @@
-export NODE_ENV=[node env]
-export APP_PORT=[port]
-export MONGO_ADDRESS=[db uri]
+# create states folder
+mkdir ./states
 
 # check if python version is set in current dir
 if [ -f ".python-version" ] ; then
     if [ ! -d ".venv" ] ; then
         echo "Installing virtualenv for $(python -V)"
-        python -m venv .venv
+        python -m venv venv
     fi
     echo "Activating $(python -V) virtualenv"
-    source .venv/bin/activate
+    source venv/bin/activate
+
+    # announce python version and show the path of the current python in ${PATH}
+    echo "Virtualenv has been activated for $(python -V)"
+    echo "Python is running from $(which python)"
+else
+    echo "Requested Python version not installed with pyenv"
 fi
 
-# announce python version and show the path of the current python in ${PATH}
-echo "Virtualenv has been activated for $(python -V)"
-echo "$(which python)"
+export MONGO_ADDRESS=[mongodb url]
+unset PS1
