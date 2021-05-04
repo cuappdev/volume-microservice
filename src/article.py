@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
-import time
+from datetime import datetime
+from time import mktime
 
 
 class Article:
@@ -16,7 +17,7 @@ class Article:
 
     def get_date(self):
         time_tuple = self.entry.published_parsed
-        return time.strftime("%Y-%m-%d %H:%M:%S", time_tuple)
+        return datetime.fromtimestamp(mktime(time_tuple))
 
     def serialize(self):
         return {
