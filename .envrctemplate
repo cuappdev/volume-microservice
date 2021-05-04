@@ -1,4 +1,3 @@
-# create states folder
 mkdir ./states
 
 # check if python version is set in current dir

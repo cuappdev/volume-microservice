@@ -7,7 +7,6 @@ from article import Article
 from publication import Publication
 from pymongo import MongoClient, UpdateOne
 
-# Open publications json file
 with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
 
@@ -23,7 +22,7 @@ with MongoClient(MONGO_ADDRESS) as client:
     db = client.microphone
     result = db.publications.bulk_write(publication_upserts)
 
-# Fucntion for gathering articles for running with scheduler
+# Function for gathering articles for running with scheduler
 def gather_articles():
     articles = []
     for publication in publications_json:

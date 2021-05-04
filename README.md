@@ -4,6 +4,8 @@
 
 A project by [Cornell AppDev](http://cornellappdev.com), a project team at Cornell University.
 
+Populates MongoDB collections for use with [volume-backend](https://github.com/cuappdev/volume-backend)
+
 ## Installation
 Clone the project with
 ```
