@@ -5,6 +5,7 @@ import requests
 import schedule
 import time
 from article import Article
+from constants import STATES_LOCATION
 from publication import Publication
 from pymongo import MongoClient, UpdateOne
 
@@ -40,12 +41,13 @@ def gather_articles():
     with MongoClient(MONGO_ADDRESS) as client:
         db = client.volume
         result = db.articles.bulk_write(article_upserts).upserted_ids
+        # Need to unwrap ObjectID objects from MongoDB into str ids
         article_ids = map(str, list(result.values()))
         response = requests.post(VOLUME_BACKEND_ADDRESS, data={'articleIDs': article_ids})
 
 # Before first run, clear states
-for f in os.listdir('./states/'):
-    os.remove(os.path.join('./states/', f))
+for f in os.listdir(STATES_LOCATION):
+    os.remove(os.path.join(STATES_LOCATION, f))
 
 # Get initial refresh
 gather_articles()

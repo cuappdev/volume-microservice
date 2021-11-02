@@ -1,7 +1,7 @@
 import feedparser
 import json
 import os
-from constants import IMAGE_ADDRESS
+from constants import IMAGE_ADDRESS, STATES_LOCATION
 
 
 class Publication:
@@ -9,7 +9,7 @@ class Publication:
         self.publication = publication
 
     def get_feed(self):
-        state_file = f"states/.state_{self.publication['slug']}.json"
+        state_file = f"{STATES_LOCATION}/.state_{self.publication['slug']}.json"
         # Get state files, if none exist initialize to empty
         try:
             with open(state_file, "r") as f:
