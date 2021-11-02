@@ -42,5 +42,6 @@ class Publication:
             "profileImageUrl": pub_img("profile"),
             "rssName": self.publication["rssName"],
             "rssUrl": self.publication["rssURL"],
+            "slug":  self.publication["slug"],
             "websiteUrl": self.publication["websiteURL"],
         }

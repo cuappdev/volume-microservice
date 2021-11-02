@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from datetime import datetime
-from time import mktime
+from dateutil import parser as date_parser
 
 
 class Article:
@@ -16,14 +16,13 @@ class Article:
         return ""
 
     def get_date(self):
-        time_tuple = self.entry.published_parsed
-        return datetime.fromtimestamp(mktime(time_tuple))
+        return date_parser.parse(self.entry.published)
 
     def serialize(self):
         return {
-            "articleUrl": self.entry.link,
+            "articleURL": self.entry.link,
             "date": self.get_date(),
-            "imageUrl": self.get_img(),
+            "imageURL": self.get_img(),
             "publicationSlug": self.slug,
             "title": self.entry.title,
         }
