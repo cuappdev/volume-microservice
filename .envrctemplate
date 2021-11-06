@@ -1,4 +1,4 @@
-mkdir ./states
+mkdir ./.states
 
 # check if python version is set in current dir
 if [ ! -d ".venv" ] ; then
@@ -6,7 +6,7 @@ if [ ! -d ".venv" ] ; then
     python3 -m venv .venv
 fi
 echo "Activating $(python3 -V) virtualenv"
-source .venv/bin/activate
+layout python3
 
 # announce python version and show the path of the current python in ${PATH}
 echo "Virtualenv has been activated for $(python -V)"
