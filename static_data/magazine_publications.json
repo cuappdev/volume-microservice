@@ -1,0 +1,16 @@
+{
+    "publications": [
+        {
+            "name":"Thread Magazine",
+            "isuID":"thethreadmagazine"
+        },
+        {
+            "name":"Guac Magazine",
+            "isuID":"guacmag"
+        },
+        {
+            "name":"Medium Design Collective",
+            "isuID":"mediumdesigncollective"
+        }
+    ]
+}
