@@ -1,9 +1,11 @@
 import json
 import logging
 import os
+import requests
 import schedule
 import time
 from article import Article
+from constants import STATES_LOCATION
 from publication import Publication
 from pymongo import MongoClient, UpdateOne
 
@@ -11,6 +13,7 @@ with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
 
 MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
+VOLUME_BACKEND_ADDRESS = os.getenv("VOLUME_BACKEND_ADDRESS")
 
 # Get serialized publications
 publications = [Publication(p).serialize() for p in publications_json]
@@ -19,7 +22,7 @@ publication_upserts = [
 ]
 # Add publications to db
 with MongoClient(MONGO_ADDRESS) as client:
-    db = client.microphone
+    db = client.volume
     result = db.publications.bulk_write(publication_upserts)
 
 # Function for gathering articles for running with scheduler
@@ -31,14 +34,20 @@ def gather_articles():
             articles.append(Article(entry, publication["slug"]).serialize())
 
     article_upserts = [
-        UpdateOne({"articleUrl": a["articleUrl"]}, {"$setOnInsert": a}, upsert=True)
+        UpdateOne({"articleURL": a["articleURL"]}, {"$setOnInsert": a}, upsert=True)
         for a in articles
     ]
     # Add articles to db
     with MongoClient(MONGO_ADDRESS) as client:
-        db = client.microphone
-        result = db.articles.bulk_write(article_upserts)
+        db = client.volume
+        result = db.articles.bulk_write(article_upserts).upserted_ids
+        # Need to unwrap ObjectID objects from MongoDB into str ids
+        article_ids = map(str, list(result.values()))
+        response = requests.post(VOLUME_BACKEND_ADDRESS, data={'articleIDs': article_ids})
 
+# Before first run, clear states
+for f in os.listdir(STATES_LOCATION):
+    os.remove(os.path.join(STATES_LOCATION, f))
 
 # Get initial refresh
 gather_articles()

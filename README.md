@@ -17,7 +17,7 @@ $ pip install -r requirements.txt
 ```
 
 ## Managing Environment
-We recommend using [pyenv](https://github.com/pyenv/pyenv) and [direnv](https://direnv.net/) for managing Python virtual environments.
+We recommend using [direnv](https://direnv.net/) and [venv](https://docs.python.org/3/tutorial/venv.html) for managing Python virtual environments.
 
 Set environment variables in the `.envrc` file outlined in the `.envrctemplate` file.
 
