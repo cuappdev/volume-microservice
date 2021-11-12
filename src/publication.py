@@ -1,5 +1,6 @@
 import feedparser
 import json
+import logging
 import os
 from constants import IMAGE_ADDRESS, STATES_LOCATION
 
@@ -9,6 +10,7 @@ class Publication:
         self.publication = publication
 
     def get_feed(self):
+        logging.info("Getting feed of " + self.publication['slug'])
         state_file = f"{STATES_LOCATION}/.state_{self.publication['slug']}.json"
         # Get state files, if none exist initialize to empty
         try:
@@ -16,14 +18,21 @@ class Publication:
                 predicates = json.load(f)
         except:
             predicates = {}
+        
         # Run parser with loaded predicates
-        feed = feedparser.parse(
-            self.publication["rssURL"],
-            **predicates,
-        )
+        try:
+            feed = feedparser.parse(
+                self.publication["rssURL"],
+                **predicates,
+            )
+        except:
+            logging.error("Not able to parse " + self.publication['slug'])
+            return []
+
         # Check if resource has been read before
         if feed.status == 304:
             return []
+
         # Save new predicates
         wanted_predicate_keys = ["etag", "modified"]
         new_predicates = dict((k, feed[k]) for k in wanted_predicate_keys if k in feed)
@@ -34,14 +43,13 @@ class Publication:
     def serialize(self):
         pub_img = lambda x: f"{IMAGE_ADDRESS}/{self.publication['slug']}/{x}.png"
         return {
-            "_id": self.publication["slug"],
-            "backgroundImageUrl": pub_img("background"),
+            "backgroundImageURL": pub_img("background"),
             "bio": self.publication["bio"],
             "bioShort": self.publication["bioShort"],
             "name": self.publication["name"],
-            "profileImageUrl": pub_img("profile"),
+            "profileImageURL": pub_img("profile"),
             "rssName": self.publication["rssName"],
-            "rssUrl": self.publication["rssURL"],
+            "rssURL": self.publication["rssURL"],
             "slug":  self.publication["slug"],
-            "websiteUrl": self.publication["websiteURL"],
+            "websiteURL": self.publication["websiteURL"],
         }
