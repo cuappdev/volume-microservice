@@ -4,9 +4,9 @@ from dateutil import parser as date_parser
 
 
 class Article:
-    def __init__(self, entry, slug):
+    def __init__(self, entry, publication):
         self.entry = entry
-        self.publication = publication
+        self.publication = publication.serialize()
 
     def get_img(self):
         if "content" in self.entry:
@@ -24,6 +24,6 @@ class Article:
             "date": self.get_date(),
             "imageURL": self.get_img(),
             "publicationSlug": self.publication["slug"],
-            "publication": self.publication.serialize(),
+            "publication": self.publication,
             "title": self.entry.title,
         }

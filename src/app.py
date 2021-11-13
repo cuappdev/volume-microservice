@@ -19,8 +19,7 @@ VOLUME_NOTIFICATIONS_ENDPOINT = os.getenv("VOLUME_NOTIFICATIONS_ENDPOINT")
 # Get serialized publications
 publications = [Publication(p).serialize() for p in publications_json]
 publication_upserts = [
-    UpdateOne({"slug": p["slug"]}, {"$setOnInsert": p}, upsert=True)
-    for p in publications
+    UpdateOne({"slug": p["slug"]}, {"$set": p}, upsert=True) for p in publications
 ]
 # Add publications to db
 with MongoClient(MONGO_ADDRESS) as client:
@@ -34,16 +33,16 @@ def gather_articles():
     for publication in publications_json:
         p = Publication(publication)
         for entry in p.get_feed():
-            articles.append(Article(entry, publication).serialize())
+            articles.append(Article(entry, p).serialize())
 
     article_upserts = [
-        UpdateOne({"articleURL": a["articleURL"]}, {"$setOnInsert": a}, upsert=True)
+        UpdateOne({"articleURL": a["articleURL"]}, {"$set": a}, upsert=True)
         for a in articles
     ]
     # Add articles to db
     with MongoClient(MONGO_ADDRESS) as client:
         db = client[DATABASE]
-        result = db.articles.bulk_write(article_upserts).upserted_ids
+        result = db.articles.bulk_write(article_upserts, ordered=False).upserted_ids
         # Need to unwrap ObjectID objects from MongoDB into str ids
         article_ids = [str(article) for article in result.values()]
         try:
