@@ -13,6 +13,7 @@ with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
 
 MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
+DATABASE = os.getenv("DATABASE")
 VOLUME_NOTIFICATIONS_ENDPOINT = os.getenv("VOLUME_NOTIFICATIONS_ENDPOINT")
 
 # Get serialized publications
@@ -22,7 +23,7 @@ publication_upserts = [
 ]
 # Add publications to db
 with MongoClient(MONGO_ADDRESS) as client:
-    db = client.volume
+    db = client[DATABASE]
     result = db.publications.bulk_write(publication_upserts)
 
 # Function for gathering articles for running with scheduler
@@ -40,15 +41,15 @@ def gather_articles():
     ]
     # Add articles to db
     with MongoClient(MONGO_ADDRESS) as client:
-        db = client.volume
+        db = client[DATABASE]
         result = db.articles.bulk_write(article_upserts).upserted_ids
         # Need to unwrap ObjectID objects from MongoDB into str ids
         article_ids = [str(article) for article in result.values()]
         try:
             logging.info(f"Sending notification for {len(article_ids)} articles")
-            requests.post(VOLUME_NOTIFICATIONS_ENDPOINT, data={'articleIDs': article_ids})
+            # requests.post(VOLUME_NOTIFICATIONS_ENDPOINT, data={'articleIDs': article_ids})
         except:
-            logging.error("Error with connecting to volume-backend.")
+            logging.error("Unable to connect to volume-backend.")
 
 # Before first run, clear states
 for f in os.listdir(STATES_LOCATION):
