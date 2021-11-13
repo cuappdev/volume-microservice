@@ -19,7 +19,8 @@ VOLUME_NOTIFICATIONS_ENDPOINT = os.getenv("VOLUME_NOTIFICATIONS_ENDPOINT")
 # Get serialized publications
 publications = [Publication(p).serialize() for p in publications_json]
 publication_upserts = [
-    UpdateOne({"slug": p["slug"]}, {"$setOnInsert": p}, upsert=True) for p in publications
+    UpdateOne({"slug": p["slug"]}, {"$setOnInsert": p}, upsert=True)
+    for p in publications
 ]
 # Add publications to db
 with MongoClient(MONGO_ADDRESS) as client:
@@ -33,7 +34,7 @@ def gather_articles():
     for publication in publications_json:
         p = Publication(publication)
         for entry in p.get_feed():
-            articles.append(Article(entry, publication["slug"]).serialize())
+            articles.append(Article(entry, publication).serialize())
 
     article_upserts = [
         UpdateOne({"articleURL": a["articleURL"]}, {"$setOnInsert": a}, upsert=True)
@@ -50,6 +51,7 @@ def gather_articles():
             # requests.post(VOLUME_NOTIFICATIONS_ENDPOINT, data={'articleIDs': article_ids})
         except:
             logging.error("Unable to connect to volume-backend.")
+
 
 # Before first run, clear states
 for f in os.listdir(STATES_LOCATION):
