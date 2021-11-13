@@ -6,7 +6,7 @@ from dateutil import parser as date_parser
 class Article:
     def __init__(self, entry, slug):
         self.entry = entry
-        self.slug = slug
+        self.publication = publication
 
     def get_img(self):
         if "content" in self.entry:
@@ -23,6 +23,7 @@ class Article:
             "articleURL": self.entry.link,
             "date": self.get_date(),
             "imageURL": self.get_img(),
-            "publicationSlug": self.slug,
+            "publicationSlug": self.publication["slug"],
+            "publication": self.publication.serialize(),
             "title": self.entry.title,
         }
