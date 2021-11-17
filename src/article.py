@@ -10,14 +10,18 @@ class Article:
         self.publication = publication.serialize()
 
     def get_img(self):
-        if "content" in self.entry:
-            soup = BeautifulSoup(self.entry.content[0].value, features="html.parser")
-            img = soup.find("img")
-            return (
-                img["src"]
-                if img
-                else IMAGE_ADDRESS + "placeholders/" + self.publication.slug + ".png"
-            )
+        for content in getattr(self.entry, "content", []):
+            if content.type == "text/html":
+                soup = BeautifulSoup(content.value, features="html.parser")
+                img = soup.find("img")
+                return (
+                    img["src"]
+                    if img
+                    else IMAGE_ADDRESS
+                    + "placeholders/"
+                    + self.publication.slug
+                    + ".png"
+                )
         return IMAGE_ADDRESS + "placeholders/" + self.publication.slug + ".png"
 
     def get_date(self):
