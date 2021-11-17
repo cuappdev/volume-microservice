@@ -62,7 +62,7 @@ for f in os.listdir(STATES_LOCATION):
 gather_articles()
 
 # Schedule the function to run every 1 hour
-schedule.every().hour.do(gather_articles)
+schedule.every(10).minutes.do(gather_articles)
 while True:
     schedule.run_pending()
     time.sleep(60)
