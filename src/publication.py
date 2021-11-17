@@ -10,7 +10,7 @@ class Publication:
         self.publication = publication
 
     def get_feed(self):
-        logging.info("Getting feed of " + self.publication['slug'])
+        logging.info("Getting feed of " + self.publication["slug"])
         state_file = f"{STATES_LOCATION}/.state_{self.publication['slug']}.json"
         # Get state files, if none exist initialize to empty
         try:
@@ -18,7 +18,7 @@ class Publication:
                 predicates = json.load(f)
         except:
             predicates = {}
-        
+
         # Run parser with loaded predicates
         try:
             feed = feedparser.parse(
@@ -26,7 +26,7 @@ class Publication:
                 **predicates,
             )
         except:
-            logging.error("Not able to parse " + self.publication['slug'])
+            logging.error("Not able to parse " + self.publication["slug"])
             return []
 
         # Check if resource has been read before
@@ -50,6 +50,6 @@ class Publication:
             "profileImageURL": pub_img("profile"),
             "rssName": self.publication["rssName"],
             "rssURL": self.publication["rssURL"],
-            "slug":  self.publication["slug"],
+            "slug": self.publication["slug"],
             "websiteURL": self.publication["websiteURL"],
         }
