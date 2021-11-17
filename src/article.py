@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from datetime import datetime
 from dateutil import parser as date_parser
+from constants import IMAGE_ADDRESS
 
 
 class Article:
@@ -12,8 +13,12 @@ class Article:
         if "content" in self.entry:
             soup = BeautifulSoup(self.entry.content[0].value, features="html.parser")
             img = soup.find("img")
-            return img["src"] if img else ""
-        return ""
+            return (
+                img["src"]
+                if img
+                else IMAGE_ADDRESS + "placeholders/" + self.publication.slug + ".png"
+            )
+        return IMAGE_ADDRESS + "placeholders/" + self.publication.slug + ".png"
 
     def get_date(self):
         return date_parser.parse(self.entry.published)
