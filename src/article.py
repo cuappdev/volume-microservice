@@ -15,6 +15,23 @@ class Article:
             return img["src"] if img else ""
         return ""
 
+    """
+    const unicodeRegex = /&#[\d,a-z]*;/ig;
+  function checkUnicode(s) {
+    try {
+      // eslint-disable-next-line func-names
+      return s.replaceAll(unicodeRegex, function (x) {
+        return String.fromCodePoint(x.slice(2, -1));
+      });
+    } catch (e) {
+      return s;
+    }
+  }
+    """
+
+    def checkUnicode(s):
+        return s.sub("&#[\d,a-z]*;",lambda unicode : ("\u"+unicode[2:-1]).decode('unicode-escape'))
+
     def get_date(self):
         return date_parser.parse(self.entry.published)
 
@@ -25,5 +42,5 @@ class Article:
             "imageURL": self.get_img(),
             "publicationSlug": self.publication["slug"],
             "publication": self.publication,
-            "title": self.entry.title,
+            "title": self.checkUnicode(self.entry.title),
         }
