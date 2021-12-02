@@ -13,37 +13,46 @@ with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
 
 MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
-VOLUME_BACKEND_ADDRESS = os.getenv("VOLUME_BACKEND_ADDRESS")
+DATABASE = os.getenv("DATABASE")
+VOLUME_NOTIFICATIONS_ENDPOINT = os.getenv("VOLUME_NOTIFICATIONS_ENDPOINT")
 
 # Get serialized publications
 publications = [Publication(p).serialize() for p in publications_json]
 publication_upserts = [
-    UpdateOne({"_id": p["_id"]}, {"$setOnInsert": p}, upsert=True) for p in publications
+    UpdateOne({"slug": p["slug"]}, {"$set": p}, upsert=True) for p in publications
 ]
 # Add publications to db
 with MongoClient(MONGO_ADDRESS) as client:
-    db = client.volume
+    db = client[DATABASE]
     result = db.publications.bulk_write(publication_upserts)
 
 # Function for gathering articles for running with scheduler
 def gather_articles():
+    logging.info("Gathering articles")
     articles = []
     for publication in publications_json:
         p = Publication(publication)
         for entry in p.get_feed():
-            articles.append(Article(entry, publication["slug"]).serialize())
+            articles.append(Article(entry, p).serialize())
 
     article_upserts = [
-        UpdateOne({"articleURL": a["articleURL"]}, {"$setOnInsert": a}, upsert=True)
+        UpdateOne({"articleURL": a["articleURL"]}, {"$set": a}, upsert=True)
         for a in articles
     ]
     # Add articles to db
     with MongoClient(MONGO_ADDRESS) as client:
-        db = client.volume
-        result = db.articles.bulk_write(article_upserts).upserted_ids
+        db = client[DATABASE]
+        result = db.articles.bulk_write(article_upserts, ordered=False).upserted_ids
         # Need to unwrap ObjectID objects from MongoDB into str ids
-        article_ids = map(str, list(result.values()))
-        response = requests.post(VOLUME_BACKEND_ADDRESS, data={'articleIDs': article_ids})
+        article_ids = [str(article) for article in result.values()]
+        try:
+            logging.info(f"Sending notification for {len(article_ids)} articles")
+        #    requests.post(
+        #         VOLUME_NOTIFICATIONS_ENDPOINT, data={"articleIDs": article_ids}
+        #     )
+        except:
+            logging.error("Unable to connect to volume-backend.")
+
 
 # Before first run, clear states
 for f in os.listdir(STATES_LOCATION):
@@ -53,7 +62,7 @@ for f in os.listdir(STATES_LOCATION):
 gather_articles()
 
 # Schedule the function to run every 1 hour
-schedule.every().hour.do(gather_articles)
+schedule.every(10).minutes.do(gather_articles)
 while True:
     schedule.run_pending()
     time.sleep(60)
