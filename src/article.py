@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from constants import PLACEHOLDER_IMAGE_ADDRESS
 from datetime import datetime
 from dateutil import parser as date_parser
 
@@ -9,11 +10,12 @@ class Article:
         self.publication = publication.serialize()
 
     def get_img(self):
+        default_image_url = PLACEHOLDER_IMAGE_ADDRESS + "/" + self.publication["slug"] + ".png"
         if "content" in self.entry:
             soup = BeautifulSoup(self.entry.content[0].value, features="html.parser")
             img = soup.find("img")
-            return img["src"] if img else ""
-        return ""
+            return img["src"] if img else default_image_url
+        return default_image_url
 
     def get_date(self):
         return date_parser.parse(self.entry.published)
