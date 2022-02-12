@@ -1,12 +1,14 @@
 from bs4 import BeautifulSoup
-from constants import PLACEHOLDER_IMAGE_ADDRESS
+from constants import PLACEHOLDER_IMAGE_ADDRESS, FILTERED_WORDS
 from datetime import datetime
 from dateutil import parser as date_parser
 from constants import IMAGE_ADDRESS
+from better_profanity import profanity as pf
 
 
 class Article:
     def __init__(self, entry, publication):
+        pf.load_censor_words(FILTERED_WORDS)
         self.entry = entry
         self.publication = publication.serialize()
 
@@ -31,4 +33,15 @@ class Article:
             "publicationSlug": self.publication["slug"],
             "publication": self.publication,
             "title": self.entry.title,
+            "filtered": self.isProfane(),
         }
+
+    def isProfane(self):
+        content = ""
+        check_content = False
+        try:  # Sometimes the entry doesn't have a content field
+            content = self.entry.content[0]["value"]
+            check_content = pf.contains_profanity(content)
+        except:
+            pass
+        return pf.contains_profanity(self.entry.title) or check_content
