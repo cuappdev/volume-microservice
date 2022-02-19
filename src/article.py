@@ -16,10 +16,18 @@ class Article:
         default_image_url = (
             PLACEHOLDER_IMAGE_ADDRESS + "/" + self.publication["slug"] + ".png"
         )
+        if self.publication["slug"] == "advocate":
+            print(self.entry)
+            print("\n\n\n\n\n\n")
         if "content" in self.entry:
             soup = BeautifulSoup(self.entry.content[0].value, features="html.parser")
             img = soup.find("img")
             return img["src"] if img else default_image_url
+        elif "summary" in self.entry:
+            soup = BeautifulSoup(self.entry.summary, features="html.parser")
+            img = soup.find("img")
+            return img["src"] if img else default_image_url
+
         return default_image_url
 
     def get_date(self):
