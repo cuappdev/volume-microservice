@@ -33,7 +33,7 @@ class Article:
             "publicationSlug": self.publication["slug"],
             "publication": self.publication,
             "title": self.entry.title,
-            "filtered": self.isProfane(),
+            "isFiltered": self.isProfane(),
         }
 
     def isProfane(self):
