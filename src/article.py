@@ -33,15 +33,13 @@ class Article:
             "publicationSlug": self.publication["slug"],
             "publication": self.publication,
             "title": self.entry.title,
-            "isFiltered": self.isProfane(),
+            "isFiltered": self.is_profane(),
         }
 
-    def isProfane(self):
+    def is_profane(self):
         content = ""
-        check_content = False
-        try:  # Sometimes the entry doesn't have a content field
+        is_content_profane = False
+        if "content" in self.entry:
             content = self.entry.content[0]["value"]
-            check_content = pf.contains_profanity(content)
-        except:
-            pass
-        return pf.contains_profanity(self.entry.title) or check_content
+            is_content_profane = pf.contains_profanity(content)
+        return pf.contains_profanity(self.entry.title) or is_content_profane
