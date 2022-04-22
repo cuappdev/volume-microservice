@@ -47,9 +47,9 @@ def gather_articles():
         article_ids = [str(article) for article in result.values()]
         try:
             logging.info(f"Sending notification for {len(article_ids)} articles")
-        #    requests.post(
-        #         VOLUME_NOTIFICATIONS_ENDPOINT, data={"articleIDs": article_ids}
-        #     )
+            requests.post(
+                ("http://" + VOLUME_NOTIFICATIONS_ENDPOINT), data={"articleIDs": article_ids}
+            )
         except:
             logging.error("Unable to connect to volume-backend.")
 
