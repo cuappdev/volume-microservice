@@ -25,8 +25,9 @@ class Publication:
                 self.publication["rssURL"],
                 **predicates,
             )
-        except:
+        except Exception as e:
             logging.error("Not able to parse " + self.publication["slug"])
+            print(e)
             return []
 
         # Check if resource has been read before

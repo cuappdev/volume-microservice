@@ -1,3 +1,4 @@
+from decimal import InvalidOperation
 import json
 import logging
 import os
@@ -10,8 +11,7 @@ from article import Article
 from magazine import Magazine
 from constants import STATES_LOCATION, GOOGLE_SHEET_ID
 from publication import Publication
-from pymongo import MongoClient, UpdateOne
-import gridfs
+from pymongo import MongoClient, UpdateOne, errors
 
 
 with open("publications.json") as f:
@@ -22,7 +22,6 @@ MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
 DATABASE = os.getenv("DATABASE")
 VOLUME_NOTIFICATIONS_ENDPOINT = os.getenv("VOLUME_NOTIFICATIONS_ENDPOINT")
 GOOGLE_SERVICE_ACCOUNT_PATH = os.getenv("GOOGLE_SERVICE_ACCOUNT_PATH")
-GOOGLE_SHEET_ID
 
 # Auth into Google Service Account
 gc = gspread.service_account(filename=GOOGLE_SERVICE_ACCOUNT_PATH)
@@ -71,22 +70,36 @@ def gather_articles():
 def gather_magazines():
     logging.info("Gathering magazines")
     magazines = []
-    for publication in publications_json:
-        p = Publication(publication)
-        data = sheet.get_all_values()
-        for i in range(len(data)):
-            if i == 0:  # Header row in sheet
-                continue
-            if data[i][5] != "T":
-                magazines.append(Magazine(data[i]).serialize())
-                sheet.update_cell(i, 6, "T")
-
-    # Add magazines to db
     with MongoClient(MONGO_ADDRESS) as client:
         db = client[DATABASE]
-        result = db.magazines.bulk_write(magazines, ordered=False).upserted_ids
-        # Need to unwrap ObjectID objects from MongoDB into str ids
-        article_ids = [str(article) for article in result.values()]
+        data = sheet.get_all_values()
+        len_data = len(data)
+        parse_counter = 1
+        for i in range(1, len_data):
+            if data[i][5] != "1" and data[i][0] != "":
+                magazines.append(Magazine(data[i]).serialize())
+                sheet.update_cell(i + 1, 6, 1)
+            else:
+                parse_counter += 1
+        if parse_counter < len_data:
+            magazine_upserts = [
+                UpdateOne({"pdfURL": m["pdfURL"]}, {"$set": m}, upsert=True)
+                for m in magazines
+            ]
+            # Add magazines to db
+            result = db.magazines.bulk_write(
+                magazine_upserts, ordered=False
+            ).upserted_ids
+
+            # Need to unwrap ObjectID objects from MongoDB into str ids
+            magazine_ids = [str(magazine) for magazine in result.values()]
+            try:
+                logging.info(f"Sending notification for {len(magazine_ids)} magazines")
+            #    requests.post(
+            #         VOLUME_NOTIFICATIONS_ENDPOINT, data={"magazineIDs": magazine_ids}
+            #     )
+            except:
+                logging.error("Unable to connect to volume-backend.")
 
 
 # Before first run, clear states
@@ -98,8 +111,9 @@ gather_magazines()
 gather_articles()
 
 
-# Schedule the function to run every 1 hour
+# Schedule the function to run every 10 minutes
 schedule.every(10).minutes.do(gather_articles)
+schedule.every(10).minutes.do(gather_magazines)
 while True:
     schedule.run_pending()
     time.sleep(60)
