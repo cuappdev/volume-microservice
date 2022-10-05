@@ -16,13 +16,17 @@ import requests
 
 
 class Magazine:
-    def __init__(self, sheet_row):
+    def __init__(self, sheet_row, publication):
+        pf.load_censor_words(FILTERED_WORDS)
         self.timestamp = sheet_row[0]
         self.slug = sheet_row[1]
         self.title = sheet_row[2]
         self.drive_link = sheet_row[3]
         self.file_id = self.drive_link[self.drive_link.index("id=") + 3 :]
         self.date_pub = sheet_row[4]
+        self.semester = sheet_row[6].lower()
+
+        self.publication = publication
 
     def download_magazine(self, id):
         creds = service_account.Credentials.from_service_account_file(
@@ -57,15 +61,25 @@ class Magazine:
             ).text
         return None
 
+    def get_date(self, date):
+        return date_parser.parse(date)
+
     def serialize(self):
         response = self.download_magazine(id)
         response = json.loads(response)
         if response["success"]:
             return {
-                "date": self.date_pub,
+                "date": self.get_date(self.timestamp),
+                "published": self.date_pub,
+                "semester": self.semester,
                 "title": self.title,
-                "slug": self.slug,
+                "publicationSlug": self.slug,
+                "publication": self.publication,
                 "pdfURL": response["data"],
+                "isFiltered": self.is_profane(),
             }
         else:
             raise Exception
+
+    def is_profane(self):
+        return pf.contains_profanity(self.title)

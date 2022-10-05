@@ -16,7 +16,7 @@ from pymongo import MongoClient, UpdateOne, errors
 
 with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
-    # magazines_publications_json = json.load(f)["magazine_publications"]
+    publications = [Publication(p) for p in publications_json]
 
 MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
 DATABASE = os.getenv("DATABASE")
@@ -29,9 +29,10 @@ sheet = gc.open_by_key(GOOGLE_SHEET_ID).sheet1
 
 
 # Get serialized publications
-publications = [Publication(p).serialize() for p in publications_json]
+publications_serialized = [p.serialize() for p in publications]
 publication_upserts = [
-    UpdateOne({"slug": p["slug"]}, {"$set": p}, upsert=True) for p in publications
+    UpdateOne({"slug": p["slug"]}, {"$set": p}, upsert=True)
+    for p in publications_serialized
 ]
 # Add publications to db
 with MongoClient(MONGO_ADDRESS) as client:
@@ -42,8 +43,7 @@ with MongoClient(MONGO_ADDRESS) as client:
 def gather_articles():
     logging.info("Gathering articles")
     articles = []
-    for publication in publications_json:
-        p = Publication(publication)
+    for p in publications:
         for entry in p.get_feed():
             articles.append(Article(entry, p).serialize())
 
@@ -77,7 +77,11 @@ def gather_magazines():
         parse_counter = 1
         for i in range(1, len_data):
             if data[i][5] != "1" and data[i][0] != "":
-                magazines.append(Magazine(data[i]).serialize())
+                p = list(
+                    filter(lambda p: p["slug"] == data[i][1], publications_serialized)
+                )
+                p = p[0] if p else None
+                magazines.append(Magazine(data[i], p).serialize())
                 sheet.update_cell(i + 1, 6, 1)
             else:
                 parse_counter += 1
