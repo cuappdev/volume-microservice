@@ -57,13 +57,15 @@ def gather_articles():
         result = db.articles.bulk_write(article_upserts, ordered=False).upserted_ids
         # Need to unwrap ObjectID objects from MongoDB into str ids
         article_ids = [str(article) for article in result.values()]
-        try:
-            logging.info(f"Sending notification for {len(article_ids)} articles")
-        #    requests.post(
-        #         VOLUME_NOTIFICATIONS_ENDPOINT, data={"articleIDs": article_ids}
-        #     )
-        except:
-            logging.error("Unable to connect to volume-backend.")
+        if article_ids:
+            try:
+                logging.info(f"Sending notification for {len(article_ids)} articles")
+                requests.post(
+                    VOLUME_NOTIFICATIONS_ENDPOINT + "/articles/",
+                    data={"articleIDs": article_ids},
+                )
+            except Exception as e:
+                logging.error("Articles unable to connect to volume-backend.")
 
 
 # Function for gathering magazines for running with scheduler
@@ -99,11 +101,13 @@ def gather_magazines():
             magazine_ids = [str(magazine) for magazine in result.values()]
             try:
                 logging.info(f"Sending notification for {len(magazine_ids)} magazines")
-            #    requests.post(
-            #         VOLUME_NOTIFICATIONS_ENDPOINT, data={"magazineIDs": magazine_ids}
-            #     )
-            except:
-                logging.error("Unable to connect to volume-backend.")
+
+                requests.post(
+                    VOLUME_NOTIFICATIONS_ENDPOINT + "/magazines/",
+                    data={"magazineIDs": magazine_ids},
+                )
+            except Exception as e:
+                logging.error("Magazines unable to connect to volume-backend.")
 
 
 # Before first run, clear states
