@@ -10,6 +10,9 @@ class Publication:
         self.publication = publication
 
     def get_feed(self):
+        if not self.publication["rssURL"]:
+            return []
+
         logging.info("Getting feed of " + self.publication["slug"])
         state_file = f"{STATES_LOCATION}/.state_{self.publication['slug']}.json"
         # Get state files, if none exist initialize to empty
@@ -25,8 +28,9 @@ class Publication:
                 self.publication["rssURL"],
                 **predicates,
             )
-        except:
+        except Exception as e:
             logging.error("Not able to parse " + self.publication["slug"])
+            print(e)
             return []
 
         # Check if resource has been read before
@@ -52,4 +56,5 @@ class Publication:
             "rssURL": self.publication["rssURL"],
             "slug": self.publication["slug"],
             "websiteURL": self.publication["websiteURL"],
+            "contentTypes": self.publication["contentTypes"],
         }
