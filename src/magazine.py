@@ -19,13 +19,12 @@ class Magazine:
     def __init__(self, sheet_row, publication):
         pf.load_censor_words(FILTERED_WORDS)
         self.timestamp = sheet_row[0]
-        self.slug = sheet_row[1]
-        self.title = sheet_row[2]
-        self.drive_link = sheet_row[3]
+        self.slug = sheet_row[2]
+        self.title = sheet_row[3]
+        self.drive_link = sheet_row[4]
         self.file_id = self.drive_link[self.drive_link.index("id=") + 3 :]
-        self.date_pub = sheet_row[4]
+        self.date_pub = sheet_row[5]
         self.semester = sheet_row[6].lower()
-
         self.publication = publication
 
     def download_magazine(self, id):

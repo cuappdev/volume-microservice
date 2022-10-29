@@ -9,7 +9,11 @@ import time
 import gspread
 from article import Article
 from magazine import Magazine
-from constants import STATES_LOCATION, GOOGLE_SHEET_ID
+from constants import (
+    DEV_GOOGLE_SHEET_ID,
+    PROD_GOOGLE_SHEET_ID,
+    STATES_LOCATION,
+)
 from publication import Publication
 from pymongo import MongoClient, UpdateOne, errors
 
@@ -22,10 +26,15 @@ MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
 DATABASE = os.getenv("DATABASE")
 VOLUME_NOTIFICATIONS_ENDPOINT = os.getenv("VOLUME_NOTIFICATIONS_ENDPOINT")
 GOOGLE_SERVICE_ACCOUNT_PATH = os.getenv("GOOGLE_SERVICE_ACCOUNT_PATH")
+SERVER = os.getenv("SERVER")
 
+if SERVER == "prod":
+    google_sheet_id = PROD_GOOGLE_SHEET_ID
+else:
+    google_sheet_id = DEV_GOOGLE_SHEET_ID
 # Auth into Google Service Account
 gc = gspread.service_account(filename=GOOGLE_SERVICE_ACCOUNT_PATH)
-sheet = gc.open_by_key(GOOGLE_SHEET_ID).sheet1
+sheet = gc.open_by_key(google_sheet_id).sheet1
 
 
 # Get serialized publications
@@ -62,10 +71,11 @@ def gather_articles():
                 logging.info(f"Sending notification for {len(article_ids)} articles")
                 requests.post(
                     VOLUME_NOTIFICATIONS_ENDPOINT + "/articles/",
-                    data={"articleIDs": article_ids},
+                    json={"articleIDs": article_ids},
                 )
             except Exception as e:
                 logging.error("Articles unable to connect to volume-backend.")
+                print(e)
 
 
 # Function for gathering magazines for running with scheduler
@@ -78,13 +88,13 @@ def gather_magazines():
         len_data = len(data)
         parse_counter = 1
         for i in range(1, len_data):
-            if data[i][5] != "1" and data[i][0] != "":
+            if data[i][7] != "1" and data[i][0] != "":
                 p = list(
-                    filter(lambda p: p["slug"] == data[i][1], publications_serialized)
+                    filter(lambda p: p["slug"] == data[i][2], publications_serialized)
                 )
                 p = p[0] if p else None
                 magazines.append(Magazine(data[i], p).serialize())
-                sheet.update_cell(i + 1, 6, 1)
+                sheet.update_cell(i + 1, 8, 1)
             else:
                 parse_counter += 1
         if parse_counter < len_data:
@@ -104,10 +114,11 @@ def gather_magazines():
 
                 requests.post(
                     VOLUME_NOTIFICATIONS_ENDPOINT + "/magazines/",
-                    data={"magazineIDs": magazine_ids},
+                    json={"magazineIDs": magazine_ids},
                 )
             except Exception as e:
                 logging.error("Magazines unable to connect to volume-backend.")
+                print(e)
 
 
 # Before first run, clear states
