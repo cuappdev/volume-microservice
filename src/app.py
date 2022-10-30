@@ -125,7 +125,7 @@ def gather_magazines():
             except Exception as e:
                 logging.error("Magazines unable to connect to volume-backend.")
                 print(e)
-    logging.info("done gathering magazines\n")
+    logging.info("Done gathering magazines\n")
 
 
 # Before first run, clear states
