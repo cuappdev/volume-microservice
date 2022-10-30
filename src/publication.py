@@ -1,7 +1,10 @@
-import feedparser
 import json
 import logging
 import os
+import sys
+
+import feedparser
+
 from constants import IMAGE_ADDRESS, STATES_LOCATION
 
 
