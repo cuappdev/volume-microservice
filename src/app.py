@@ -50,7 +50,7 @@ def gather_articles():
         try:
             logging.info(f"Sending notification for {len(article_ids)} articles")
             requests.post(
-                ("http://" + VOLUME_NOTIFICATIONS_ENDPOINT),
+                VOLUME_NOTIFICATIONS_ENDPOINT,
                 data={"articleIDs": article_ids},
             )
         except:
