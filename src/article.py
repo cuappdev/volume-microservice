@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from better_profanity import profanity as pf
 from bs4 import BeautifulSoup
 from dateutil import parser as date_parser
