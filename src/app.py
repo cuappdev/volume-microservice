@@ -1,22 +1,27 @@
-from decimal import InvalidOperation
 import json
 import logging
 import os
+import re
+import sys
+import time
+from decimal import InvalidOperation
+
+import gspread
 import requests
 import schedule
-import re
-import time
-import gspread
-from article import Article
-from magazine import Magazine
-from constants import (
-    DEV_GOOGLE_SHEET_ID,
-    PROD_GOOGLE_SHEET_ID,
-    STATES_LOCATION,
-)
-from publication import Publication
 from pymongo import MongoClient, UpdateOne, errors
 
+from article import Article
+from constants import DEV_GOOGLE_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
+from magazine import Magazine
+from publication import Publication
+
+# set base config of logger to log timestamps and info level
+logging.basicConfig(
+    format="%(asctime)s %(levelname)-8s %(message)s",
+    level=logging.INFO,
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
 
 with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
@@ -76,6 +81,7 @@ def gather_articles():
             except Exception as e:
                 logging.error("Articles unable to connect to volume-backend.")
                 print(e)
+    logging.info("Done gathering articles\n")
 
 
 # Function for gathering magazines for running with scheduler
@@ -119,6 +125,7 @@ def gather_magazines():
             except Exception as e:
                 logging.error("Magazines unable to connect to volume-backend.")
                 print(e)
+    logging.info("Done gathering magazines\n")
 
 
 # Before first run, clear states
