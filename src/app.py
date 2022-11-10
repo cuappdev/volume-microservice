@@ -12,8 +12,7 @@ import schedule
 from pymongo import MongoClient, UpdateOne, errors
 
 from article import Article
-from constants import (DEV_GOOGLE_SHEET_ID, PROD_GOOGLE_SHEET_ID,
-                       STATES_LOCATION)
+from constants import DEV_GOOGLE_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
 from magazine import Magazine
 from publication import Publication
 
