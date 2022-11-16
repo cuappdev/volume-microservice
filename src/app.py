@@ -1,15 +1,12 @@
 import json
 import logging
 import os
-import re
-import sys
 import time
-from decimal import InvalidOperation
 
 import gspread
 import requests
 import schedule
-from pymongo import MongoClient, UpdateOne, errors
+from pymongo import MongoClient, UpdateOne
 
 from article import Article
 from constants import DEV_GOOGLE_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
@@ -94,13 +91,14 @@ def gather_magazines():
         len_data = len(data)
         parse_counter = 1
         for i in range(1, len_data):
-            if data[i][7] != "1" and data[i][0] != "":
-                p = list(
-                    filter(lambda p: p["slug"] == data[i][2], publications_serialized)
-                )
-                p = p[0] if p else None
+            parsed = data[i][7]
+            timestamp = data[i][0]
+            if parsed != "1" and timestamp != "":
+                slug = data[i][2]
+                p = list(filter(lambda p: p["slug"] == slug, publications_serialized))
+                p = p[0] if p else None  # Get only one publication
                 magazines.append(Magazine(data[i], p).serialize())
-                sheet.update_cell(i + 1, 8, 1)
+                sheet.update_cell(i + 1, 8, 1)  # Updates parsed to equal 1
             else:
                 parse_counter += 1
         if parse_counter < len_data:

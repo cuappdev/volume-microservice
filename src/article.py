@@ -2,7 +2,6 @@ from better_profanity import profanity as pf
 from bs4 import BeautifulSoup
 from constants import PLACEHOLDER_IMAGE_ADDRESS, FILTERED_WORDS
 from dateutil import parser as date_parser
-from constants import IMAGE_ADDRESS
 
 
 class Article:
