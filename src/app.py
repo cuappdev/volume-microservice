@@ -91,9 +91,9 @@ def gather_magazines():
         len_data = len(data)
         parse_counter = 1
         for i in range(1, len_data):
-            parsed = data[i][7]
-            timestamp = data[i][0]
-            if parsed != "1" and timestamp != "":
+            parsed = data[i][7] == "1"
+            data_is_empty = data[i][0] == ""
+            if not parsed and not data_is_empty:
                 slug = data[i][2]
                 p = list(filter(lambda p: p["slug"] == slug, publications_serialized))
                 p = p[0] if p else None  # Get only one publication
