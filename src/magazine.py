@@ -1,9 +1,7 @@
 from __future__ import print_function
 import base64
 from better_profanity import profanity as pf
-from bs4 import BeautifulSoup
-import bson
-from constants import PLACEHOLDER_IMAGE_ADDRESS, FILTERED_WORDS, UPLOAD_BUCKET
+from constants import FILTERED_WORDS, UPLOAD_BUCKET
 from dateutil import parser as date_parser
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
