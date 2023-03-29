@@ -379,62 +379,6 @@
         }
       ],
       "websiteURL": "https://www.the180print.org/"
-    },
-    {
-      "bio": "Through the creative collaboration of Cornell University students, Collective X magazine undermines the persistent exclusion of diverse/non-normative individuals within creative fields, while testing artistic boundaries as a means of self-exploration.",
-      "bioShort": "We are a fashion publication that aims to develop the narrative experiences of oppressed and disregarded populations.",
-      "contentTypes": ["magazines"],
-      "rssName": "Collective X",
-      "rssURL": null,
-      "name": "Collective X",
-      "slug": "collective",
-      "socialURLs": [
-        {
-          "social": "insta",
-          "URL": "https://www.instagram.com/collectivexcornell/"
-        },
-        {
-          "social": "facebook",
-          "URL": "https://www.facebook.com/collectivexmagazine/"
-        }
-      ],
-      "websiteURL": "https://www.thecollectivexliberation.com/"
-    },
-    {
-      "bio": "A student-run publication sharing the latest innovations in science, health, and medicine.",
-      "bioShort": "Everything about science, health, and medicine.",
-      "contentTypes": ["articles"],
-      "rssName": "The Cornell Healthcare Review",
-      "rssURL": "https://www.cornellhealthcarereview.org/blogs-feed.xml",
-      "name": "The Cornell Healthcare Review",
-      "slug": "healthcare",
-      "socialURLs": [
-        {
-          "social": "insta",
-          "URL": "https://www.instagram.com/cuhealthcarereview/"
-        }
-      ],
-      "websiteURL": "https://www.cornellhealthcarereview.org/"
-    },
-    {
-      "bio": "Founded in 1880, The Sun is the oldest continuously independent college daily in the United States.",
-      "bioShort": "Independent since 1880.",
-      "contentTypes": ["articles"],
-      "rssName": "The Cornell Daily Sun",
-      "rssURL": null,
-      "name": "The Cornell Daily Sun",
-      "slug": "sun",
-      "socialURLs": [
-        {
-          "social": "insta",
-          "URL": "https://www.instagram.com/cornellsun/"
-        },
-        {
-          "social": "facebook",
-          "URL": "https://www.facebook.com/cornellsun/"
-        }
-      ],
-      "websiteURL": "https://cornellsun.com/"
     }
   ]
 }
