@@ -136,7 +136,6 @@ dmypy.json
 # VS Code
 .vscode
 
-secrets/
 # Mac/OSX
 .DS_Store
 
