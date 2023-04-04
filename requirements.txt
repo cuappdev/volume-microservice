@@ -28,3 +28,5 @@ gdown==4.4.0
 google-api-python-client
 google-auth-httplib2
 google-auth-oauthlib
+Pillow==9.5.0
+pypdfium2==4.4.0
