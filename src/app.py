@@ -11,7 +11,9 @@ from pymongo import MongoClient, UpdateOne
 from article import Article
 from constants import DEV_GOOGLE_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
 from magazine import Magazine
+from organization import Organization
 from publication import Publication
+
 
 # set base config of logger to log timestamps and info level
 logging.basicConfig(
@@ -23,6 +25,10 @@ logging.basicConfig(
 with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
     publications = [Publication(p) for p in publications_json]
+
+with open("organizations.json") as f:
+    organizations_json = json.load(f)["organizations"]
+    organizations = [Organization(o) for o in organizations_json]
 
 MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
 DATABASE = os.getenv("DATABASE")
@@ -49,6 +55,17 @@ publication_upserts = [
 with MongoClient(MONGO_ADDRESS) as client:
     db = client[DATABASE]
     result = db.publications.bulk_write(publication_upserts)
+
+# Get serialized organizations
+organizations_serialized = [o.serialize() for o in organizations]
+organization_upserts = [
+    UpdateOne({"slug": o["slug"]}, {"$set": o}, upsert=True)
+    for o in organizations_serialized
+]
+# Add organizations to db
+with MongoClient(MONGO_ADDRESS) as client:
+    db = client[DATABASE]
+    result = db.organizations.bulk_write(organization_upserts)
 
 # Function for gathering articles for running with scheduler
 def gather_articles():
