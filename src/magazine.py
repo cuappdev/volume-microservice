@@ -34,7 +34,8 @@ class Magazine:
         ({"success": <bool>, "data": "<pdf url?>"}, {"success": <bool>, "data": "<first page png url?>"})
         """
         creds = service_account.Credentials.from_service_account_file(
-            os.getenv("GOOGLE_SERVICE_ACCOUNT_PATH"))
+            os.getenv("GOOGLE_SERVICE_ACCOUNT_PATH")
+        )
         
         try:
             # create drive api client
@@ -60,20 +61,21 @@ class Magazine:
             imageBytes = io.BytesIO() #create bytes stream to hold image
             pil_image.save(imageBytes, format='png')
             
-            image_payload = json.dumps(
-            {
-            "bucket": "volume",
-            "image": "data:image/png;base64,"
-            + base64.b64encode(imageBytes.getvalue()).decode("utf-8")})
+            image_payload = json.dumps({
+                "bucket": "volume",
+                "image": "data:image/png;base64,"
+                + base64.b64encode(imageBytes.getvalue()).decode("utf-8")
+            })
             
             image_response = requests.post("https://upload.cornellappdev.com/upload/",image_payload).text
 
-            pdf_payload = json.dumps(
-                {"bucket": UPLOAD_BUCKET,
+            pdf_payload = json.dumps({
+                "bucket": UPLOAD_BUCKET,
                 "image": "data:application/pdf;base64,"
-                + base64.b64encode(file.getvalue()).decode("utf-8")})
+                + base64.b64encode(file.getvalue()).decode("utf-8")
+            })
             
-            pdf_response  = requests.post("https://upload.cornellappdev.com/upload/",pdf_payload).text
+            pdf_response = requests.post("https://upload.cornellappdev.com/upload/",pdf_payload).text
             
             return (pdf_response, image_response)
         return None
