@@ -1,17 +1,10 @@
 from __future__ import print_function
-import base64
 from better_profanity import profanity as pf
-from constants import FILTERED_WORDS, UPLOAD_BUCKET
+from constants import FILTERED_WORDS
 from dateutil import parser as date_parser
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from googleapiclient.http import MediaIoBaseDownload
-from google.oauth2 import service_account
-import io
-import json
-import os
-import requests
 
+import json
+import utils
 
 class Magazine:
     def __init__(self, sheet_row, publication):
@@ -25,44 +18,11 @@ class Magazine:
         self.semester = sheet_row[6].lower()
         self.publication = publication
 
-    def download_magazine(self, id):
-        creds = service_account.Credentials.from_service_account_file(
-            os.getenv("GOOGLE_SERVICE_ACCOUNT_PATH")
-        )
-        try:
-            # create drive api client
-            service = build("drive", "v3", credentials=creds)
-
-            # pylint: disable=maybe-no-member
-            request = service.files().get_media(fileId=self.file_id)
-            file = io.BytesIO()
-            downloader = MediaIoBaseDownload(file, request)
-            done = False
-            while done is False:
-                status, done = downloader.next_chunk()
-
-        except HttpError as error:
-            print(f"An error occurred: {error}")
-            file = None
-        if file is not None:
-            payload = json.dumps(
-                {
-                    "bucket": UPLOAD_BUCKET,
-                    "image": "data:application/pdf;base64,"
-                    + base64.b64encode(file.getvalue()).decode("utf-8"),
-                }
-            )
-            return requests.post(
-                "https://upload.cornellappdev.com/upload/",
-                payload,
-            ).text
-        return None
-
     def get_date(self, date):
         return date_parser.parse(date)
 
     def serialize(self):
-        response = self.download_magazine(id)
+        response = utils.download_content(self)
         response = json.loads(response)
         if response["success"]:
             return {
