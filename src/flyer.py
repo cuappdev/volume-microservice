@@ -25,8 +25,8 @@ class Flyer:
         return pf.contains_profanity(self.title)
     
     def serialize(self):
-        response = utils.download_content(self)
-        response = json.loads(response)
+        response_bytes = utils.download_bytes(self)
+        response = json.loads(utils.download_pdf(response_bytes))
         if response["success"]:
           return {
               "date": self.date,

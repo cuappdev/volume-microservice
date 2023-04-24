@@ -22,8 +22,8 @@ class Magazine:
         return date_parser.parse(date)
 
     def serialize(self):
-        response = utils.download_content(self)
-        response = json.loads(response)
+        response_bytes = utils.download_bytes(self)
+        response = json.loads(utils.download_pdf(response_bytes))
         if response["success"]:
             return {
                 "date": self.get_date(self.timestamp),
