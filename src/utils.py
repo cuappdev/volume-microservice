@@ -36,9 +36,7 @@ def download_bytes(self):
     except HttpError as error:
         print(f"An error occurred: {error}")
         file = None
-    if file is not None:
-        return file
-    return None
+    return file
 
 def download_pdf(file):
     """
