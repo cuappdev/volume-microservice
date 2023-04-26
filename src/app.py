@@ -7,7 +7,7 @@ import schedule
 import time
 
 from article import Article
-from constants import DEV_FLYER_SHEET_ID, DEV_GOOGLE_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
+from constants import DEV_FLYER_SHEET_ID, DEV_GOOGLE_SHEET_ID, PROD_FLYER_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
 from flyer import Flyer
 from magazine import Magazine
 from organization import Organization
@@ -40,6 +40,7 @@ SERVER = os.getenv("SERVER")
 
 if SERVER == "prod":
     google_sheet_id = PROD_GOOGLE_SHEET_ID
+    flyer_sheet_id = PROD_FLYER_SHEET_ID
 else:
     google_sheet_id = DEV_GOOGLE_SHEET_ID
     flyer_sheet_id = DEV_FLYER_SHEET_ID
