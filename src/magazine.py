@@ -22,17 +22,19 @@ class Magazine:
         return date_parser.parse(date)
 
     def serialize(self):
-        response_bytes = utils.download_bytes(self)
-        response = json.loads(utils.download_pdf(response_bytes))
-        if response["success"]:
-            return {
+        pdf_bytes = utils.download_bytes(self)
+        pdf_response = json.loads(utils.download_pdf(pdf_bytes))
+        image_response = json.loads(utils.download_image_from_pdf(pdf_bytes))
+        if pdf_response["success"] and image_response["success"]:
+            return { 
                 "date": self.get_date(self.timestamp),
                 "published": self.date_pub,
                 "semester": self.semester,
                 "title": self.title,
                 "publicationSlug": self.slug,
                 "publication": self.publication,
-                "pdfURL": response["data"],
+                "pdfURL": pdf_response["data"],
+                "imageURL": image_response["data"],
                 "isFiltered": self.is_profane(),
             }
         else:
