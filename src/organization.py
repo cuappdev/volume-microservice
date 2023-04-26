@@ -13,5 +13,6 @@ class Organization:
             "name": self.organization["name"],
             "profileImageURL": org_img("profile"),
             "slug": self.organization["slug"],
-            "websiteURL": self.organization["websiteURL"]
+            "websiteURL": self.organization["websiteURL"],
+            "categorySlug": self.organization["categorySlug"]
         }

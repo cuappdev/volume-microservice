@@ -1,20 +1,32 @@
 {
-	"organizations": [{
-			"bio": "",
-			"name": "Women in Stem at Cornell",
-			"slug": "wicc",
-			"websiteURL": "https://wicc.cornell.edu/#/"
-		}, {
+	"organizations": [
+		{
 			"bio": "",
 			"name": "AppDev",
 			"slug": "appdev",
-			"websiteURL": "https://www.cornellappdev.com/"
+			"websiteURL": "https://www.cornellappdev.com/",
+			"categorySlug": "academic"
 		},
 		{
 			"bio": "",
 			"name": "Badminton Club",
 			"slug": "badminton",
-			"websiteURL": "https://cornellbadminton.com/"
+			"websiteURL": "https://cornellbadminton.com/",
+			"categorySlug": "sports"
+		},
+		{
+			"bio": "",
+			"name": "ESports at Cornell",
+			"slug": "esports",
+			"websiteURL": "https://esportsatcornell.com/index.php",
+			"categorySlug": "sports"
+		},
+		{
+			"bio": "",
+			"name": "Women in Stem at Cornell",
+			"slug": "wicc",
+			"websiteURL": "https://wicc.cornell.edu/#/",
+			"categorySlug": "academic"
 		}
 	]
 }
