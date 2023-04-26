@@ -16,10 +16,38 @@
 		},
 		{
 			"bio": "",
+			"name": "Campus Installation Artists",
+			"slug": "cia",
+			"websiteURL": null,
+			"categorySlug": "academic"
+		},
+		{
+			"bio": "",
+			"name": "Cornell Fintech",
+			"slug": "fintech",
+			"websiteURL": "https://www.cornellfintechclub.com/",
+			"categorySlug": "academic"
+		},
+		{
+			"bio": "",
 			"name": "ESports at Cornell",
 			"slug": "esports",
 			"websiteURL": "https://esportsatcornell.com/index.php",
 			"categorySlug": "sports"
+		},
+		{
+			"bio": "",
+			"name": "Residential Sustainability Leaders",
+			"slug": "rsl",
+			"websiteURL": "https://www.cornellfintechclub.com/",
+			"categorySlug": "academic"
+		},
+		{
+			"bio": "",
+			"name": "Underrepresented Minorities in Computing",
+			"slug": "urmc",
+			"websiteURL": "https://eship.cornell.edu/item/urmc/",
+			"categorySlug": "academic"
 		},
 		{
 			"bio": "",
