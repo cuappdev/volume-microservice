@@ -397,7 +397,7 @@
       "bioShort": "Independent since 1880.",
       "contentTypes": ["articles"],
       "rssName": "The Cornell Daily Sun",
-      "rssURL": null,
+      "rssURL": "https://cornellsun.com/feed/",
       "name": "The Cornell Daily Sun",
       "slug": "sun",
       "socialURLs": [
