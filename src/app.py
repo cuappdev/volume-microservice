@@ -1,17 +1,21 @@
+import gspread
 import json
 import logging
 import os
-import time
-
-import gspread
 import requests
 import schedule
-from pymongo import MongoClient, UpdateOne
+import time
 
 from article import Article
-from constants import DEV_GOOGLE_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
+from constants import DEV_FLYER_SHEET_ID, DEV_GOOGLE_SHEET_ID, PROD_FLYER_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
+from flyer import Flyer
 from magazine import Magazine
+from organization import Organization
 from publication import Publication
+from pymongo import MongoClient, UpdateOne
+
+
+
 
 # set base config of logger to log timestamps and info level
 logging.basicConfig(
@@ -24,6 +28,10 @@ with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
     publications = [Publication(p) for p in publications_json]
 
+with open("organizations.json") as f:
+    organizations_json = json.load(f)["organizations"]
+    organizations = [Organization(o) for o in organizations_json]
+
 MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
 DATABASE = os.getenv("DATABASE")
 VOLUME_NOTIFICATIONS_ENDPOINT = os.getenv("VOLUME_NOTIFICATIONS_ENDPOINT")
@@ -32,11 +40,14 @@ SERVER = os.getenv("SERVER")
 
 if SERVER == "prod":
     google_sheet_id = PROD_GOOGLE_SHEET_ID
+    flyer_sheet_id = PROD_FLYER_SHEET_ID
 else:
     google_sheet_id = DEV_GOOGLE_SHEET_ID
+    flyer_sheet_id = DEV_FLYER_SHEET_ID
 # Auth into Google Service Account
 gc = gspread.service_account(filename=GOOGLE_SERVICE_ACCOUNT_PATH)
 sheet = gc.open_by_key(google_sheet_id).sheet1
+flyer_sheet = gc.open_by_key(flyer_sheet_id).sheet1
 
 
 # Get serialized publications
@@ -49,6 +60,17 @@ publication_upserts = [
 with MongoClient(MONGO_ADDRESS) as client:
     db = client[DATABASE]
     result = db.publications.bulk_write(publication_upserts)
+
+# Get serialized organizations
+organizations_serialized = [o.serialize() for o in organizations]
+organization_upserts = [
+    UpdateOne({"slug": o["slug"]}, {"$set": o}, upsert=True)
+    for o in organizations_serialized
+]
+# Add organizations to db
+with MongoClient(MONGO_ADDRESS) as client:
+    db = client[DATABASE]
+    result = db.organizations.bulk_write(organization_upserts)
 
 # Function for gathering articles for running with scheduler
 def gather_articles():
@@ -125,6 +147,39 @@ def gather_magazines():
                 print(e)
     logging.info("Done gathering magazines\n")
 
+# Function for gathering magazines for running with scheduler
+def gather_flyers():
+    logging.info("Gathering flyers")
+    flyers = []
+    with MongoClient(MONGO_ADDRESS) as client:
+        db = client[DATABASE]
+        data = flyer_sheet.get_all_values()
+        len_data = len(data)
+        parse_counter = 1
+        for i in range(1, len_data):
+            parsed = data[i][11] == "1"
+            data_is_empty = data[i][0] == ""
+            if not parsed and not data_is_empty:
+                slug = data[i][4]
+                o = list(filter(lambda o: o["slug"] == slug, organizations_serialized))
+                
+                o = o[0] if o else None  # Get only one organization
+                print(o)
+                flyers.append(Flyer(data[i], o).serialize())
+                flyer_sheet.update_cell(i + 1, 12, 1)  # Updates parsed to equal 1
+            else:
+                parse_counter += 1
+        if parse_counter < len_data:
+            flyer_upserts = [
+                UpdateOne({"imageURL": f["imageURL"]}, {"$set": f}, upsert=True)
+                for f in flyers
+            ]
+            # Add flyers to db
+            db.flyers.bulk_write(flyer_upserts, ordered=False).upserted_ids
+
+            
+    logging.info("Done gathering flyers\n")
+
 
 # Before first run, clear states
 for f in os.listdir(STATES_LOCATION):
@@ -133,11 +188,12 @@ for f in os.listdir(STATES_LOCATION):
 # Get initial refresh
 gather_magazines()
 gather_articles()
-
+gather_flyers()
 
 # Schedule the function to run every 10 minutes
 schedule.every(10).minutes.do(gather_articles)
 schedule.every(10).minutes.do(gather_magazines)
+schedule.every(10).minutes.do(gather_flyers)
 while True:
     schedule.run_pending()
     time.sleep(60)
