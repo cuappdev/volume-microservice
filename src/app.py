@@ -164,7 +164,6 @@ def gather_flyers():
                 o = list(filter(lambda o: o["slug"] == slug, organizations_serialized))
                 
                 o = o[0] if o else None  # Get only one organization
-                print(o)
                 flyers.append(Flyer(data[i], o).serialize())
                 flyer_sheet.update_cell(i + 1, 12, 1)  # Updates parsed to equal 1
             else:
