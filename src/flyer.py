@@ -34,8 +34,8 @@ class Flyer:
               "flyerURL": self.flyer_link,
               "imageURL": response["data"],
               "location": self.location,
-              "organization": self.organization,
-              "organizationSlug": self.org_slug,
+              "organizations": [self.organization],
+              "organizationSlugs": [self.org_slug],
               "title": self.title
           }
         else:
