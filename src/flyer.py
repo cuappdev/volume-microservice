@@ -1,6 +1,7 @@
 from better_profanity import profanity as pf
 from constants import FILTERED_WORDS
 
+import dateutil.parser as parser
 import json
 import utils
 
@@ -29,13 +30,13 @@ class Flyer:
         response = json.loads(utils.download_pdf(response_bytes))
         if response["success"]:
           return {
-              "startDate": self.date + "/" + self.start_time,
-              "endDate": self.date + "/" + self.end_time,
+              "startDate": parser.parse(self.date + "/" + self.start_time).isoformat(),
+              "endDate": parser.parse(self.date + "/" + self.end_time).isoformat(),
               "flyerURL": self.flyer_link,
               "imageURL": response["data"],
               "location": self.location,
-              "organization": self.organization,
-              "organizationSlug": self.org_slug,
+              "organizations": [self.organization],
+              "organizationSlugs": [self.org_slug],
               "title": self.title
           }
         else:
