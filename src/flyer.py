@@ -30,8 +30,8 @@ class Flyer:
         response = json.loads(utils.download_pdf(response_bytes))
         if response["success"]:
           return {
-              "startDate": parser.parse(self.date + "/" + self.start_time).isoformat(),
-              "endDate": parser.parse(self.date + "/" + self.end_time).isoformat(),
+              "startDate": parser.parse(self.date + "/" + self.start_time),
+              "endDate": parser.parse(self.date + "/" + self.end_time),
               "flyerURL": self.flyer_link,
               "imageURL": response["data"],
               "location": self.location,

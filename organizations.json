@@ -1,452 +1,494 @@
 {
 	"organizations": [
 		{
-			"bio": "",
-			"name": "African Dance Repertoire",
 			"slug": "adr",
-			"websiteURL": "https://www.instagram.com/adrcornell/?hl=en",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "African Dance Repertoire",
+			"websiteURL": "https://www.instagram.com/adrcornell/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "After Eight",
 			"slug": "after8",
-			"websiteURL": "http://cuchorus.com/after-eight",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "After Eight",
+			"websiteURL": "http://cuchorus.com/after-eight"
 		},
 		{
-			"bio": "",
-			"name": "Alt Protein",
 			"slug": "protein",
-			"websiteURL": "https://www.instagram.com/altprocornell/?hl=en",
-			"categorySlug": "foodDrinks"
+			"bio": "",
+			"categorySlug": "foodDrinks",
+			"name": "Alt Protein",
+			"websiteURL": "https://www.instagram.com/altprocornell/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "AppDev",
 			"slug": "appdev",
-			"websiteURL": "https://www.cornellappdev.com/",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "AppDev",
+			"websiteURL": "https://www.cornellappdev.com/"
 		},
 		{
-			"bio": "",
-			"name": "Asian American Intervarsity",
 			"slug": "aaiv",
-			"websiteURL": "https://www.instagram.com/cornellaaiv/?hl=en",
-			"categorySlug": "spiritual"
+			"bio": "",
+			"categorySlug": "spiritual",
+			"name": "Asian American Intervarsity",
+			"websiteURL": "https://www.instagram.com/cornellaaiv/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Asian Pacific Student Union",
 			"slug": "capsu",
-			"websiteURL": "https://www.capsucornell.org/",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Asian Pacific Student Union",
+			"websiteURL": "https://www.capsucornell.org/"
 		},
 		{
-			"bio": "",
-			"name": "Assorted Aces",
 			"slug": "assortedaces",
-			"websiteURL": "https://linktr.ee/assortedaces",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Assorted Aces",
+			"websiteURL": "https://linktr.ee/assortedaces"
 		},
 		{
-			"bio": "",
-			"name": "Badminton Club",
 			"slug": "badminton",
-			"websiteURL": "https://cornellbadminton.com/",
-			"categorySlug": "sports"
+			"bio": "",
+			"categorySlug": "sports",
+			"name": "Badminton Club",
+			"websiteURL": "https://cornellbadminton.com/"
 		},
 		{
-			"bio": "",
-			"name": "Bangladeshi Student Association",
 			"slug": "bsa",
-			"websiteURL": "https://www.instagram.com/cornellbsa/?hl=en",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Bangladeshi Student Association",
+			"websiteURL": "https://www.instagram.com/cornellbsa/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Big Red Raas",
 			"slug": "bigredraas",
-			"websiteURL": "https://cornellbigredraas.github.io/",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Big Red Raas",
+			"websiteURL": "https://cornellbigredraas.github.io/"
 		},
 		{
-			"bio": "",
-			"name": "Break Free",
 			"slug": "breakfree",
-			"websiteURL": "https://www.breakfreecornell.com/",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Break Free",
+			"websiteURL": "https://www.breakfreecornell.com/"
 		},
 		{
-			"bio": "",
-			"name": "Campus Installation Artists",
 			"slug": "cia",
-			"websiteURL": null,
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Campus Installation Artists",
+			"websiteURL": null
 		},
 		{
-			"bio": "",
-			"name": "Chinese Student Assocation",
 			"slug": "csa",
-			"websiteURL": "https://www.instagram.com/cornell_csa/?hl=en",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Chinese Student Assocation",
+			"websiteURL": "https://www.instagram.com/cornell_csa/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Bhangra",
 			"slug": "bhangra",
-			"websiteURL": "https://www.instagram.com/cornellbhangra/?hl=en",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Cornell Bhangra",
+			"websiteURL": "https://www.instagram.com/cornellbhangra/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Callbaxx",
 			"slug": "callbaxx",
-			"websiteURL": "https://www.instagram.com/thecallbaxx/?hl=en",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Cornell Callbaxx",
+			"websiteURL": "https://www.instagram.com/thecallbaxx/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Chimes",
 			"slug": "cornellchimes",
-			"websiteURL": "https://chimes.cornell.edu/",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Cornell Chimes",
+			"websiteURL": "https://chimes.cornell.edu/"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Chinese Drama Society",
 			"slug": "ccds",
-			"websiteURL": "https://www.instagram.com/cornelljingyuan/",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Cornell Chinese Drama Society",
+			"websiteURL": "https://www.instagram.com/cornelljingyuan/"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Filipino Association",
 			"slug": "cfa",
-			"websiteURL": "https://www.instagram.com/cornellfilipino/?hl=en",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Cornell Filipino Association",
+			"websiteURL": "https://www.instagram.com/cornellfilipino/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Fintech",
 			"slug": "fintech",
-			"websiteURL": "https://www.cornellfintechclub.com/",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Cornell Fintech",
+			"websiteURL": "https://www.cornellfintechclub.com/"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Hydroponics Club",
 			"slug": "hydroponics",
-			"websiteURL": "https://www.instagram.com/cornellhydroponicsclub/?hl=en",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Cornell Hydroponics Club",
+			"websiteURL": "https://www.instagram.com/cornellhydroponicsclub/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Lion Dance",
 			"slug": "liondance",
-			"websiteURL": "https://www.instagram.com/cornell_liondance/?hl=en",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Cornell Lion Dance",
+			"websiteURL": "https://www.instagram.com/cornell_liondance/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Nazaqat",
 			"slug": "nazaqat",
-			"websiteURL": "https://www.instagram.com/cornellnazaqat/?hl=en",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Cornell Nazaqat",
+			"websiteURL": "https://www.instagram.com/cornellnazaqat/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Sitara",
 			"slug": "sitara",
-			"websiteURL": "https://www.instagram.com/cornellsitara/?hl=en",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Cornell Sitara",
+			"websiteURL": "https://www.instagram.com/cornellsitara/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Taiwanese American Society",
 			"slug": "ctas",
-			"websiteURL": "https://cornelltas.com/",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Cornell Taiwanese American Society",
+			"websiteURL": "https://cornelltas.com/"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Thrift",
 			"slug": "thrift",
-			"websiteURL": "https://www.instagram.com/cornellthrift/?hl=en",
-			"categorySlug": "awareness"
+			"bio": "",
+			"categorySlug": "awareness",
+			"name": "Cornell Thrift",
+			"websiteURL": "https://www.instagram.com/cornellthrift/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Touchtones",
 			"slug": "touchtones",
-			"websiteURL": "https://www.thetouchtones.com/",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Cornell Touchtones",
+			"websiteURL": "https://www.thetouchtones.com/"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Vietnamese Association",
 			"slug": "cva",
-			"websiteURL": "https://www.instagram.com/cornellviet/?hl=en",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Cornell Vietnamese Association",
+			"websiteURL": "https://www.instagram.com/cornellviet/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Wardrobe",
 			"slug": "wardrobe",
-			"websiteURL": "https://www.cornellwardrobe.org/",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Cornell Wardrobe",
+			"websiteURL": "https://www.cornellwardrobe.org/"
 		},
 		{
-			"bio": "",
-			"name": "Cornell Wushu",
 			"slug": "wushu",
-			"websiteURL": "https://cornellwushu.github.io/",
-			"categorySlug": "sports"
+			"bio": "",
+			"categorySlug": "sports",
+			"name": "Cornell Wushu",
+			"websiteURL": "https://cornellwushu.github.io/"
 		},
 		{
-			"bio": "",
-			"name": "CU Class councils",
 			"slug": "cucouncils",
-			"websiteURL": "https://www.instagram.com/cuclasscouncils/?hl=en",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "CU Class councils",
+			"websiteURL": "https://www.instagram.com/cuclasscouncils/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "DTI",
 			"slug": "dti",
-			"websiteURL": "https://www.cornelldti.org/",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "DTI",
+			"websiteURL": "https://www.cornelldti.org/"
 		},
 		{
-			"bio": "",
-			"name": "ESports at Cornell",
 			"slug": "esports",
-			"websiteURL": "https://esportsatcornell.com/index.php",
-			"categorySlug": "sports"
+			"bio": "",
+			"categorySlug": "sports",
+			"name": "ESports at Cornell",
+			"websiteURL": "https://esportsatcornell.com/index.php"
 		},
 		{
-			"bio": "",
-			"name": "E-Motion",
 			"slug": "emotion",
-			"websiteURL": "https://www.instagram.com/cornellemotion/?hl=en",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "E-Motion",
+			"websiteURL": "https://www.instagram.com/cornellemotion/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Food Science Club",
 			"slug": "foodsci",
-			"websiteURL": "https://www.instagram.com/cornellfoodscience/?hl=en",
-			"categorySlug": "foodDrinks"
+			"bio": "",
+			"categorySlug": "foodDrinks",
+			"name": "Food Science Club",
+			"websiteURL": "https://www.instagram.com/cornellfoodscience/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Food & Beverage Society",
 			"slug": "fbs",
-			"websiteURL": "https://www.instagram.com/cornell_fbs/?hl=en",
-			"categorySlug": "foodDrinks"
+			"bio": "",
+			"categorySlug": "foodDrinks",
+			"name": "Food & Beverage Society",
+			"websiteURL": "https://www.instagram.com/cornell_fbs/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Free Space",
 			"slug": "freespace",
-			"websiteURL": null,
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Free Space",
+			"websiteURL": null
 		},
 		{
-			"bio": "",
-			"name": "Guild of Visual Arts",
 			"slug": "gva",
-			"websiteURL": "https://cornell.campusgroups.com/gva/home/",
-			"categorySlug": "art"
+			"bio": "",
+			"categorySlug": "art",
+			"name": "Guild of Visual Arts",
+			"websiteURL": "https://cornell.campusgroups.com/gva/home/"
 		},
 		{
-			"bio": "",
-			"name": "Hearsay A Cappella",
 			"slug": "hearsay",
-			"websiteURL": "https://www.hearsayacappella.com/",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Hearsay A Cappella",
+			"websiteURL": "https://www.hearsayacappella.com/"
 		},
 		{
-			"bio": "",
-			"name": "Hong Kong Student Assocation",
 			"slug": "hksa",
-			"websiteURL": "https://www.instagram.com/cornellhksa/?hl=en",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Hong Kong Student Assocation",
+			"websiteURL": "https://www.instagram.com/cornellhksa/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "International Student Union",
 			"slug": "isu",
-			"websiteURL": "https://isucornell.com/",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "International Student Union",
+			"websiteURL": "https://isucornell.com/"
 		},
 		{
-			"bio": "",
-			"name": "Japan US Association",
 			"slug": "jusa",
-			"websiteURL": "https://cornelljusa.wordpress.com/",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Japan US Association",
+			"websiteURL": "https://cornelljusa.wordpress.com/"
 		},
 		{
-			"bio": "",
-			"name": "Korean American Student Association",
 			"slug": "kasa",
-			"websiteURL": "https://www.instagram.com/cornellkasa/?hl=en",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Korean American Student Association",
+			"websiteURL": "https://www.instagram.com/cornellkasa/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Last Call",
 			"slug": "lastcall",
-			"websiteURL": "https://menoflastcall.com/",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Last Call",
+			"websiteURL": "https://menoflastcall.com/"
 		},
 		{
-			"bio": "",
-			"name": "Loko",
 			"slug": "loko",
-			"websiteURL": "https://www.instagram.com/loko_cornell/?hl=en",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Loko",
+			"websiteURL": "https://www.instagram.com/loko_cornell/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Mediocre Melodies",
 			"slug": "mediocre",
-			"websiteURL": "https://mediocremelodies.com/",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Mediocre Melodies",
+			"websiteURL": "https://mediocremelodies.com/"
 		},
 		{
-			"bio": "",
-			"name": "Medium Design Collective",
 			"slug": "mediumdesigncollective",
-			"websiteURL": "https://cornellmedium.design/",
-			"categorySlug": "art"
+			"bio": "",
+			"categorySlug": "art",
+			"name": "Medium Design Collective",
+			"websiteURL": "https://cornellmedium.design/"
 		},
 		{
-			"bio": "",
-			"name": "Mexican Student Association",
 			"slug": "mex",
-			"websiteURL": "https://cornell.campusgroups.com/mexsa/home/",
-			"categorySlug": "cultural"
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Mexican Student Association",
+			"websiteURL": "https://cornell.campusgroups.com/mexsa/home/"
 		},
 		{
-			"bio": "",
-			"name": "Midnight Comedy",
 			"slug": "midnightcomedy",
-			"websiteURL": "https://www.midnightcomedytroupe.com/",
-			"categorySlug": "comedy"
+			"bio": "",
+			"categorySlug": "comedy",
+			"name": "Midnight Comedy",
+			"websiteURL": "https://www.midnightcomedytroupe.com/"
 		},
 		{
-			"bio": "",
-			"name": "Nothing But Treble",
 			"slug": "nbt",
-			"websiteURL": "https://www.nothingbuttreblecornell.com/",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Nothing But Treble",
+			"websiteURL": "https://www.nothingbuttreblecornell.com/"
 		},
 		{
-			"bio": "",
-			"name": "Pants Improv Comedy",
 			"slug": "pantsimprov",
-			"websiteURL": "https://pantsimprov.wixsite.com/comedy",
-			"categorySlug": "comedy"
+			"bio": "",
+			"categorySlug": "comedy",
+			"name": "Pants Improv Comedy",
+			"websiteURL": "https://pantsimprov.wixsite.com/comedy"
 		},
 		{
-			"bio": "",
-			"name": "Project Hope",
 			"slug": "projecthope",
-			"websiteURL": "http://projecthopecornell.weebly.com/",
-			"categorySlug": "awareness"
+			"bio": "",
+			"categorySlug": "awareness",
+			"name": "Project Hope",
+			"websiteURL": "http://projecthopecornell.weebly.com/"
 		},
 		{
-			"bio": "",
-			"name": "Residential Sustainability Leaders",
 			"slug": "rsl",
-			"websiteURL": "https://experience.cornell.edu/opportunities/residential-sustainability-leaders-rsls",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Residential Sustainability Leaders",
+			"websiteURL": "https://experience.cornell.edu/opportunities/residential-sustainability-leaders-rsls"
 		},
 		{
-			"bio": "",
-			"name": "Rise Dance Group",
 			"slug": "rise",
-			"websiteURL": "https://www.risedancegroupcornell.com/",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Rise Dance Group",
+			"websiteURL": "https://www.risedancegroupcornell.com/"
 		},
 		{
-			"bio": "",
-			"name": "Sabor Latino",
 			"slug": "sabor",
-			"websiteURL": "https://www.instagram.com/cornellsaborlatino/?hl=en",
-			"categorySlug": "dance"
+			"bio": "",
+			"categorySlug": "dance",
+			"name": "Sabor Latino",
+			"websiteURL": "https://www.instagram.com/cornellsaborlatino/?hl=en"
 		},
 		{
-			"bio": "",
-			"name": "Shimtah",
 			"slug": "shimtah",
-			"websiteURL": "https://sites.google.com/cornell.edu/shimtah/home?pli=1",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Shimtah",
+			"websiteURL": "https://sites.google.com/cornell.edu/shimtah/home?pli=1"
 		},
 		{
-			"bio": "",
-			"name": "Tarana A Cappella",
 			"slug": "tarana",
-			"websiteURL": "https://www.cornelltarana.net/",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Tarana A Cappella",
+			"websiteURL": "https://www.cornelltarana.net/"
 		},
 		{
-			"bio": "",
-			"name": "The Hangovers",
 			"slug": "hangovers",
-			"websiteURL": "http://www.hangovers.com/",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "The Hangovers",
+			"websiteURL": "http://www.hangovers.com/"
 		},
 		{
-			"bio": "",
-			"name": "The Key Elements",
 			"slug": "keyelements",
-			"websiteURL": "https://ke-website.webflow.io/",
-			"categorySlug": "music"
+			"bio": "",
+			"categorySlug": "music",
+			"name": "The Key Elements",
+			"websiteURL": "https://ke-website.webflow.io/"
 		},
 		{
-			"bio": "",
-			"name": "Translator Interpreter Program",
 			"slug": "tip",
-			"websiteURL": "https://cornell.campusgroups.com/tip/home/",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Translator Interpreter Program",
+			"websiteURL": "https://cornell.campusgroups.com/tip/home/"
 		},
 		{
-			"bio": "",
-			"name": "Underrepresented Minorities in Computing",
 			"slug": "urmc",
-			"websiteURL": "https://eship.cornell.edu/item/urmc/",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Underrepresented Minorities in Computing",
+			"websiteURL": "https://eship.cornell.edu/item/urmc/"
 		},
 		{
-			"bio": "",
-			"name": "Whistling Shrimp",
 			"slug": "whistlingshrimp",
-			"websiteURL": "https://thewhistlingshrimp.weebly.com/",
-			"categorySlug": "comedy"
+			"bio": "",
+			"categorySlug": "comedy",
+			"name": "Whistling Shrimp",
+			"websiteURL": "https://thewhistlingshrimp.weebly.com/"
 		},
 		{
-			"bio": "",
-			"name": "Women in Stem at Cornell",
 			"slug": "wicc",
-			"websiteURL": "https://wicc.cornell.edu/#/",
-			"categorySlug": "academic"
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Women in Stem at Cornell",
+			"websiteURL": "https://wicc.cornell.edu/#/"
 		},
 		{
-			"bio": "",
-			"name": "Women Leaders of Color",
 			"slug": "wlc",
-			"websiteURL": "https://cornell.campusgroups.com/wlocc/home/",
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Women Leaders of Color",
+			"websiteURL": "https://cornell.campusgroups.com/wlocc/home/"
+		},
+		{
+			"slug": "yamatai",
+			"bio": "",
+			"categorySlug": "music",
+			"name": "Yamatai",
+			"websiteURL": "https://www.yamatai-taiko.com/"
+		},
+		{
+			"slug": "cupb",
+			"bio": "",
+			"name": "Cornell Program Board",
+			"websiteURL": "https://www.instagram.com/cornellevents/",
 			"categorySlug": "academic"
 		},
 		{
+			"slug": "concerts",
 			"bio": "",
-			"name": "Yamatai",
-			"slug": "yamatai",
-			"websiteURL": "https://www.yamatai-taiko.com/",
+			"name": "Cornell Concerts",
+			"websiteURL": "https://www.instagram.com/cornellconcerts/",
 			"categorySlug": "music"
+		},
+		{
+			"slug": "housing",
+			"bio": "",
+			"name": "Cornell Housing",
+			"websiteURL": "https://www.instagram.com/cornellhousing/",
+			"categorySlug": "academic"
+		},
+		{
+			"slug": "tatkon",
+			"bio": "",
+			"name": "Cornell Tatkon",
+			"websiteURL": "https://scl.cornell.edu/get-involved/tatkon-center-new-students",
+			"categorySlug": "academic"
+		},
+		{
+			"slug": "campact",
+			"bio": "",
+			"name": "Cornell Campus Activities",
+			"websiteURL": "https://scl.cornell.edu/get-involved/campus-activities",
+			"categorySlug": "academic"
+		},
+		{
+			"slug": "cals",
+			"bio": "",
+			"name": "CALS",
+			"websiteURL": "https://cals.cornell.edu/",
+			"categorySlug": "academic"
 		}
 	]
 }
