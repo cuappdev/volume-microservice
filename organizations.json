@@ -451,44 +451,44 @@
 		{
 			"slug": "cupb",
 			"bio": "",
+			"categorySlug": "academic",
 			"name": "Cornell Program Board",
-			"websiteURL": "https://www.instagram.com/cornellevents/",
-			"categorySlug": "academic"
+			"websiteURL": "https://www.instagram.com/cornellevents/"
 		},
 		{
 			"slug": "concerts",
 			"bio": "",
+			"categorySlug": "music",
 			"name": "Cornell Concerts",
-			"websiteURL": "https://www.instagram.com/cornellconcerts/",
-			"categorySlug": "music"
+			"websiteURL": "https://www.instagram.com/cornellconcerts/"
 		},
 		{
 			"slug": "housing",
 			"bio": "",
+			"categorySlug": "academic",
 			"name": "Cornell Housing",
-			"websiteURL": "https://www.instagram.com/cornellhousing/",
-			"categorySlug": "academic"
+			"websiteURL": "https://www.instagram.com/cornellhousing/"
 		},
 		{
 			"slug": "tatkon",
 			"bio": "",
+			"categorySlug": "academic",
 			"name": "Cornell Tatkon",
-			"websiteURL": "https://scl.cornell.edu/get-involved/tatkon-center-new-students",
-			"categorySlug": "academic"
+			"websiteURL": "https://scl.cornell.edu/get-involved/tatkon-center-new-students"
 		},
 		{
 			"slug": "campact",
 			"bio": "",
+			"categorySlug": "academic",
 			"name": "Cornell Campus Activities",
-			"websiteURL": "https://scl.cornell.edu/get-involved/campus-activities",
-			"categorySlug": "academic"
+			"websiteURL": "https://scl.cornell.edu/get-involved/campus-activities"
 		},
 		{
 			"slug": "cals",
 			"bio": "",
+			"categorySlug": "academic",
 			"name": "CALS",
-			"websiteURL": "https://cals.cornell.edu/",
-			"categorySlug": "academic"
+			"websiteURL": "https://cals.cornell.edu/"
 		}
 	]
 }
