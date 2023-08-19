@@ -4,6 +4,7 @@ from constants import FILTERED_WORDS
 import dateutil.parser as parser
 import json
 import utils
+import pytz
 
 class Flyer:
     def __init__(self, sheet_row, organization):
@@ -30,8 +31,8 @@ class Flyer:
         response = json.loads(utils.download_pdf(response_bytes))
         if response["success"]:
           return {
-              "startDate": parser.parse(self.date + "/" + self.start_time),
-              "endDate": parser.parse(self.date + "/" + self.end_time),
+              "startDate": parser.parse(self.date + "/" + self.start_time).astimezone(pytz.UTC),
+              "endDate": parser.parse(self.date + "/" + self.end_time).astimezone(pytz.UTC),
               "flyerURL": self.flyer_link,
               "imageURL": response["data"],
               "location": self.location,
