@@ -1,5 +1,5 @@
 from better_profanity import profanity as pf
-from constants import FILTERED_WORDS
+from constants import FILTERED_WORDS, EST_TZINFOS
 
 import dateutil.parser as parser
 import json
@@ -26,13 +26,18 @@ class Flyer:
     def is_profane(self):
         return pf.contains_profanity(self.title)
     
+    def convert_est_to_utc(self, date, time):
+        if time == "":
+            return parser.parse(f"{date} 00:00 EST", tzinfos=EST_TZINFOS).astimezone(pytz.utc)
+        return parser.parse(f"{date} {time} EST", tzinfos=EST_TZINFOS).astimezone(pytz.utc)
+    
     def serialize(self):
         response_bytes = utils.download_bytes(self)
         response = json.loads(utils.download_pdf(response_bytes))
         if response["success"]:
           return {
-              "startDate": parser.parse(self.date + "/" + self.start_time).astimezone(pytz.UTC),
-              "endDate": parser.parse(self.date + "/" + self.end_time).astimezone(pytz.UTC),
+              "startDate": self.convert_est_to_utc(self.date, self.start_time),
+              "endDate": self.convert_est_to_utc(self.date, self.end_time),
               "flyerURL": self.flyer_link,
               "imageURL": response["data"],
               "location": self.location,
