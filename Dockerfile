@@ -1,5 +1,4 @@
 FROM python:3.9.7
-ENV TZ="America/New_York"
 RUN mkdir -p /usr/src/microservice
 WORKDIR /usr/src/microservice
 COPY . .
