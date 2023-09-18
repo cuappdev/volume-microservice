@@ -489,6 +489,13 @@
 			"categorySlug": "academic",
 			"name": "CALS",
 			"websiteURL": "https://cals.cornell.edu/"
+		},
+		{
+			"slug": "sub",
+			"bio": "",
+			"categorySlug": "community",
+			"name": "Student Union Board",
+			"websiteURL": "https://www.instagram.com/studentunionboard/"
 		}
 	]
 }
