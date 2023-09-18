@@ -174,7 +174,20 @@ def gather_flyers():
                 for f in flyers
             ]
             # Add flyers to db
-            db.flyers.bulk_write(flyer_upserts, ordered=False).upserted_ids
+            result = db.flyers.bulk_write(flyer_upserts, ordered=False).upserted_ids
+
+            # Need to unwrap ObjectID objects from MongoDB into str ids
+            flyer_ids = [str(flyer) for flyer in result.values()]
+            try:
+                logging.info(f"Sending notification for {len(flyer_ids)} flyers")
+
+                requests.post(
+                    VOLUME_NOTIFICATIONS_ENDPOINT + "/flyers/",
+                    json={"flyerIDs": flyer_ids},
+                )
+            except Exception as e:
+                logging.error("Flyers unable to connect to volume-backend.")
+                print(e)
 
             
     logging.info("Done gathering flyers\n")
