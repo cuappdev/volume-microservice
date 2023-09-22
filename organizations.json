@@ -431,7 +431,7 @@
 			"slug": "wicc",
 			"bio": "",
 			"categorySlug": "academic",
-			"name": "Women in Stem at Cornell",
+			"name": "Women in Computing at Cornell",
 			"websiteURL": "https://wicc.cornell.edu/#/"
 		},
 		{
@@ -489,6 +489,13 @@
 			"categorySlug": "academic",
 			"name": "CALS",
 			"websiteURL": "https://cals.cornell.edu/"
+		},
+		{
+			"slug": "sub",
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Student Union Board",
+			"websiteURL": "https://www.instagram.com/studentunionboard/"
 		}
 	]
 }
