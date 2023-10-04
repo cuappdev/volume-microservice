@@ -1,6 +1,13 @@
 {
 	"organizations": [
 		{
+			"slug": "acsu",
+			"bio": "",
+			"categorySlug": "academic",
+			"name": "Cornell ACSU",
+			"websiteURL": "https://acsu.cornell.edu/"
+		},
+		{
 			"slug": "adr",
 			"bio": "",
 			"categorySlug": "dance",
@@ -82,7 +89,7 @@
 			"bio": "",
 			"categorySlug": "academic",
 			"name": "Campus Installation Artists",
-			"websiteURL": null
+			"websiteURL": "https://www.instagram.com/cia_cornell/"
 		},
 		{
 			"slug": "csa",
@@ -125,6 +132,13 @@
 			"categorySlug": "cultural",
 			"name": "Cornell Filipino Association",
 			"websiteURL": "https://www.instagram.com/cornellfilipino/?hl=en"
+		},
+		{
+			"slug": "ecua",
+			"bio": "",
+			"categorySlug": "cultural",
+			"name": "Ecuadorian Students’ Association",
+			"websiteURL": "https://www.instagram.com/ecuacornell/"
 		},
 		{
 			"slug": "fintech",
@@ -250,7 +264,7 @@
 			"bio": "",
 			"categorySlug": "dance",
 			"name": "Free Space",
-			"websiteURL": null
+			"websiteURL": "https://www.instagram.com/freespace.dance/"
 		},
 		{
 			"slug": "gva",
