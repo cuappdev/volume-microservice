@@ -15,8 +15,6 @@ from publication import Publication
 from pymongo import MongoClient, UpdateOne
 
 
-
-
 # set base config of logger to log timestamps and info level
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s",
@@ -73,6 +71,8 @@ with MongoClient(MONGO_ADDRESS) as client:
     result = db.organizations.bulk_write(organization_upserts)
 
 # Function for gathering articles for running with scheduler
+
+
 def gather_articles():
     logging.info("Gathering articles")
     articles = []
@@ -87,12 +87,14 @@ def gather_articles():
     # Add articles to db
     with MongoClient(MONGO_ADDRESS) as client:
         db = client[DATABASE]
-        result = db.articles.bulk_write(article_upserts, ordered=False).upserted_ids
+        result = db.articles.bulk_write(
+            article_upserts, ordered=False).upserted_ids
         # Need to unwrap ObjectID objects from MongoDB into str ids
         article_ids = [str(article) for article in result.values()]
         if article_ids:
             try:
-                logging.info(f"Sending notification for {len(article_ids)} articles")
+                logging.info(
+                    f"Sending notification for {len(article_ids)} articles")
                 requests.post(
                     VOLUME_NOTIFICATIONS_ENDPOINT + "/articles/",
                     json={"articleIDs": article_ids},
@@ -117,7 +119,8 @@ def gather_magazines():
             data_is_empty = data[i][0] == ""
             if not parsed and not data_is_empty:
                 slug = data[i][2]
-                p = list(filter(lambda p: p["slug"] == slug, publications_serialized))
+                p = list(filter(lambda p: p["slug"]
+                         == slug, publications_serialized))
                 p = p[0] if p else None  # Get only one publication
                 magazines.append(Magazine(data[i], p).serialize())
                 sheet.update_cell(i + 1, 8, 1)  # Updates parsed to equal 1
@@ -136,7 +139,8 @@ def gather_magazines():
             # Need to unwrap ObjectID objects from MongoDB into str ids
             magazine_ids = [str(magazine) for magazine in result.values()]
             try:
-                logging.info(f"Sending notification for {len(magazine_ids)} magazines")
+                logging.info(
+                    f"Sending notification for {len(magazine_ids)} magazines")
 
                 requests.post(
                     VOLUME_NOTIFICATIONS_ENDPOINT + "/magazines/",
@@ -148,6 +152,8 @@ def gather_magazines():
     logging.info("Done gathering magazines\n")
 
 # Function for gathering magazines for running with scheduler
+
+
 def gather_flyers():
     logging.info("Gathering flyers")
     flyers = []
@@ -161,25 +167,30 @@ def gather_flyers():
             data_is_empty = data[i][0] == ""
             if not parsed and not data_is_empty:
                 slug = data[i][4]
-                o = list(filter(lambda o: o["slug"] == slug, organizations_serialized))
-                
+                o = list(filter(lambda o: o["slug"]
+                         == slug, organizations_serialized))
+
                 o = o[0] if o else None  # Get only one organization
                 flyers.append(Flyer(data[i], o).serialize())
-                flyer_sheet.update_cell(i + 1, 12, 1)  # Updates parsed to equal 1
+                # Updates parsed to equal 1
+                flyer_sheet.update_cell(i + 1, 12, 1)
             else:
                 parse_counter += 1
         if parse_counter < len_data:
             flyer_upserts = [
-                UpdateOne({"imageURL": f["imageURL"]}, {"$set": f}, upsert=True)
+                UpdateOne({"imageURL": f["imageURL"]},
+                          {"$set": f}, upsert=True)
                 for f in flyers
             ]
             # Add flyers to db
-            result = db.flyers.bulk_write(flyer_upserts, ordered=False).upserted_ids
+            result = db.flyers.bulk_write(
+                flyer_upserts, ordered=False).upserted_ids
 
             # Need to unwrap ObjectID objects from MongoDB into str ids
             flyer_ids = [str(flyer) for flyer in result.values()]
             try:
-                logging.info(f"Sending notification for {len(flyer_ids)} flyers")
+                logging.info(
+                    f"Sending notification for {len(flyer_ids)} flyers")
 
                 requests.post(
                     VOLUME_NOTIFICATIONS_ENDPOINT + "/flyers/",
@@ -189,8 +200,11 @@ def gather_flyers():
                 logging.error("Flyers unable to connect to volume-backend.")
                 print(e)
 
-            
     logging.info("Done gathering flyers\n")
+
+
+def gather_orgs():
+    pass
 
 
 # Before first run, clear states
@@ -201,11 +215,13 @@ for f in os.listdir(STATES_LOCATION):
 gather_magazines()
 gather_articles()
 gather_flyers()
+gather_orgs()
 
 # Schedule the function to run every 10 minutes
 schedule.every(10).minutes.do(gather_articles)
 schedule.every(10).minutes.do(gather_magazines)
 schedule.every(10).minutes.do(gather_flyers)
+schedule.every(10).minutes.do(gather_orgs)
 while True:
     schedule.run_pending()
     time.sleep(60)
