@@ -7,7 +7,7 @@ import schedule
 import time
 
 from article import Article
-from constants import DEV_FLYER_SHEET_ID, DEV_GOOGLE_SHEET_ID, PROD_FLYER_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
+from constants import DEV_FLYER_SHEET_ID, DEV_ORGANIZATION_SHEET_ID, DEV_GOOGLE_SHEET_ID, PROD_FLYER_SHEET_ID, PROD_ORGANIZATION_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
 from flyer import Flyer
 from magazine import Magazine
 from organization import Organization
@@ -39,13 +39,16 @@ SERVER = os.getenv("SERVER")
 if SERVER == "prod":
     google_sheet_id = PROD_GOOGLE_SHEET_ID
     flyer_sheet_id = PROD_FLYER_SHEET_ID
+    org_sheet_id = PROD_ORGANIZATION_SHEET_ID
 else:
     google_sheet_id = DEV_GOOGLE_SHEET_ID
     flyer_sheet_id = DEV_FLYER_SHEET_ID
+    org_sheet_id = DEV_ORGANIZATION_SHEET_ID
 # Auth into Google Service Account
 gc = gspread.service_account(filename=GOOGLE_SERVICE_ACCOUNT_PATH)
 sheet = gc.open_by_key(google_sheet_id).sheet1
 flyer_sheet = gc.open_by_key(flyer_sheet_id).sheet1
+org_sheet = gc.open_by_key(org_sheet_id).sheet1
 
 
 # Get serialized publications
@@ -202,9 +205,35 @@ def gather_flyers():
 
     logging.info("Done gathering flyers\n")
 
+# Function for gathering organizations for running with scheduler
+
 
 def gather_orgs():
-    pass
+    logging.info("Gathering organizations")
+    orgs = []
+    with MongoClient(MONGO_ADDRESS) as client:
+        db = client[DATABASE]
+        data = org_sheet.get_all_values()
+        len_data = len(data)
+        parse_counter = 1
+        for i in range(1, len_data):
+            parsed = data[i][11] == "1"
+            data_is_empty = data[i][0] == ""
+            if not parsed and not data_is_empty:
+                orgs.append(Organization(data[i]).serialize())
+                # Updates parsed to equal 1
+                org_sheet.update_cell(i + 1, 12, 1)
+            else:
+                parse_counter += 1
+        if parse_counter < len_data:
+            org_upserts = [
+                UpdateOne({"$set": org}, upsert=True)
+                for org in organizations
+            ]
+            # Add organizations to db
+            db.organizations.bulk_write(org_upserts, ordered=False)
+
+    logging.info("Done gathering organizations\n")
 
 
 # Before first run, clear states
