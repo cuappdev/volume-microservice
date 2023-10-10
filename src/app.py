@@ -193,7 +193,7 @@ gather_orgs()
 # Schedule the function to run every 10 minutes
 schedule.every(10).minutes.do(gather_articles)
 schedule.every(10).minutes.do(gather_magazines)
-schedule.every(10).minutes.do(gather_orgs)
+schedule.every(1).minutes.do(gather_orgs)
 while True:
     schedule.run_pending()
     time.sleep(60)
