@@ -7,8 +7,14 @@ import schedule
 import time
 
 from article import Article
-from constants import DEV_FLYER_SHEET_ID, DEV_ORGANIZATION_SHEET_ID, DEV_GOOGLE_SHEET_ID, PROD_FLYER_SHEET_ID, PROD_ORGANIZATION_SHEET_ID, PROD_GOOGLE_SHEET_ID, STATES_LOCATION
-from flyer import Flyer
+from constants import (
+    ACCESS_CODE_SHEET_ID,
+    DEV_ORGANIZATION_SHEET_ID,
+    DEV_GOOGLE_SHEET_ID,
+    PROD_ORGANIZATION_SHEET_ID,
+    PROD_GOOGLE_SHEET_ID,
+    STATES_LOCATION,
+)
 from magazine import Magazine
 from organization import Organization
 from publication import Publication
@@ -26,9 +32,6 @@ with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
     publications = [Publication(p) for p in publications_json]
 
-with open("organizations.json") as f:
-    organizations_json = json.load(f)["organizations"]
-    organizations = [Organization(o) for o in organizations_json]
 
 MONGO_ADDRESS = os.getenv("MONGO_ADDRESS")
 DATABASE = os.getenv("DATABASE")
@@ -36,18 +39,20 @@ VOLUME_NOTIFICATIONS_ENDPOINT = os.getenv("VOLUME_NOTIFICATIONS_ENDPOINT")
 GOOGLE_SERVICE_ACCOUNT_PATH = os.getenv("GOOGLE_SERVICE_ACCOUNT_PATH")
 SERVER = os.getenv("SERVER")
 
-if SERVER == "prod":
-    google_sheet_id = PROD_GOOGLE_SHEET_ID
-    flyer_sheet_id = PROD_FLYER_SHEET_ID
-    org_sheet_id = PROD_ORGANIZATION_SHEET_ID
-else:
-    google_sheet_id = DEV_GOOGLE_SHEET_ID
-    flyer_sheet_id = DEV_FLYER_SHEET_ID
-    org_sheet_id = DEV_ORGANIZATION_SHEET_ID
+
 # Auth into Google Service Account
 gc = gspread.service_account(filename=GOOGLE_SERVICE_ACCOUNT_PATH)
+
+if SERVER == "prod":
+    google_sheet_id = PROD_GOOGLE_SHEET_ID
+    org_sheet_id = PROD_ORGANIZATION_SHEET_ID
+    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).sheet2
+else:
+    google_sheet_id = DEV_GOOGLE_SHEET_ID
+    org_sheet_id = DEV_ORGANIZATION_SHEET_ID
+    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).sheet1
+
 sheet = gc.open_by_key(google_sheet_id).sheet1
-flyer_sheet = gc.open_by_key(flyer_sheet_id).sheet1
 org_sheet = gc.open_by_key(org_sheet_id).sheet1
 
 
@@ -57,25 +62,15 @@ publication_upserts = [
     UpdateOne({"slug": p["slug"]}, {"$set": p}, upsert=True)
     for p in publications_serialized
 ]
+
+
 # Add publications to db
 with MongoClient(MONGO_ADDRESS) as client:
     db = client[DATABASE]
     result = db.publications.bulk_write(publication_upserts)
 
-# Get serialized organizations
-organizations_serialized = [o.serialize() for o in organizations]
-organization_upserts = [
-    UpdateOne({"slug": o["slug"]}, {"$set": o}, upsert=True)
-    for o in organizations_serialized
-]
-# Add organizations to db
-with MongoClient(MONGO_ADDRESS) as client:
-    db = client[DATABASE]
-    result = db.organizations.bulk_write(organization_upserts)
 
 # Function for gathering articles for running with scheduler
-
-
 def gather_articles():
     logging.info("Gathering articles")
     articles = []
@@ -90,14 +85,12 @@ def gather_articles():
     # Add articles to db
     with MongoClient(MONGO_ADDRESS) as client:
         db = client[DATABASE]
-        result = db.articles.bulk_write(
-            article_upserts, ordered=False).upserted_ids
+        result = db.articles.bulk_write(article_upserts, ordered=False).upserted_ids
         # Need to unwrap ObjectID objects from MongoDB into str ids
         article_ids = [str(article) for article in result.values()]
         if article_ids:
             try:
-                logging.info(
-                    f"Sending notification for {len(article_ids)} articles")
+                logging.info(f"Sending notification for {len(article_ids)} articles")
                 requests.post(
                     VOLUME_NOTIFICATIONS_ENDPOINT + "/articles/",
                     json={"articleIDs": article_ids},
@@ -122,8 +115,7 @@ def gather_magazines():
             data_is_empty = data[i][0] == ""
             if not parsed and not data_is_empty:
                 slug = data[i][2]
-                p = list(filter(lambda p: p["slug"]
-                         == slug, publications_serialized))
+                p = list(filter(lambda p: p["slug"] == slug, publications_serialized))
                 p = p[0] if p else None  # Get only one publication
                 magazines.append(Magazine(data[i], p).serialize())
                 sheet.update_cell(i + 1, 8, 1)  # Updates parsed to equal 1
@@ -142,8 +134,7 @@ def gather_magazines():
             # Need to unwrap ObjectID objects from MongoDB into str ids
             magazine_ids = [str(magazine) for magazine in result.values()]
             try:
-                logging.info(
-                    f"Sending notification for {len(magazine_ids)} magazines")
+                logging.info(f"Sending notification for {len(magazine_ids)} magazines")
 
                 requests.post(
                     VOLUME_NOTIFICATIONS_ENDPOINT + "/magazines/",
@@ -154,60 +145,8 @@ def gather_magazines():
                 print(e)
     logging.info("Done gathering magazines\n")
 
-# Function for gathering magazines for running with scheduler
-
-
-def gather_flyers():
-    logging.info("Gathering flyers")
-    flyers = []
-    with MongoClient(MONGO_ADDRESS) as client:
-        db = client[DATABASE]
-        data = flyer_sheet.get_all_values()
-        len_data = len(data)
-        parse_counter = 1
-        for i in range(1, len_data):
-            parsed = data[i][11] == "1"
-            data_is_empty = data[i][0] == ""
-            if not parsed and not data_is_empty:
-                slug = data[i][4]
-                o = list(filter(lambda o: o["slug"]
-                         == slug, organizations_serialized))
-
-                o = o[0] if o else None  # Get only one organization
-                flyers.append(Flyer(data[i], o).serialize())
-                # Updates parsed to equal 1
-                flyer_sheet.update_cell(i + 1, 12, 1)
-            else:
-                parse_counter += 1
-        if parse_counter < len_data:
-            flyer_upserts = [
-                UpdateOne({"imageURL": f["imageURL"]},
-                          {"$set": f}, upsert=True)
-                for f in flyers
-            ]
-            # Add flyers to db
-            result = db.flyers.bulk_write(
-                flyer_upserts, ordered=False).upserted_ids
-
-            # Need to unwrap ObjectID objects from MongoDB into str ids
-            flyer_ids = [str(flyer) for flyer in result.values()]
-            try:
-                logging.info(
-                    f"Sending notification for {len(flyer_ids)} flyers")
-
-                requests.post(
-                    VOLUME_NOTIFICATIONS_ENDPOINT + "/flyers/",
-                    json={"flyerIDs": flyer_ids},
-                )
-            except Exception as e:
-                logging.error("Flyers unable to connect to volume-backend.")
-                print(e)
-
-    logging.info("Done gathering flyers\n")
 
 # Function for gathering organizations for running with scheduler
-
-
 def gather_orgs():
     logging.info("Gathering organizations")
     orgs = []
@@ -216,19 +155,25 @@ def gather_orgs():
         data = org_sheet.get_all_values()
         len_data = len(data)
         parse_counter = 1
+        parsed_column = 8
         for i in range(1, len_data):
-            parsed = data[i][11] == "1"
+            parsed = data[i][parsed_column] == "1"
             data_is_empty = data[i][0] == ""
             if not parsed and not data_is_empty:
-                orgs.append(Organization(data[i]).serialize())
-                # Updates parsed to equal 1
-                org_sheet.update_cell(i + 1, 12, 1)
+                plainCode, org = Organization(data[i]).serialize()
+                orgs.append(org)
+                # Update parsed to equal 1
+                org_sheet.update_cell(i + 1, parsed_column + 1, 1)
+                # Update access code sheet
+                access_code_sheet.append_row(
+                    [org["slug"], plainCode, org["accessCode"]], table_range="A:D"
+                )
             else:
                 parse_counter += 1
         if parse_counter < len_data:
             org_upserts = [
-                UpdateOne({"$set": org}, upsert=True)
-                for org in organizations
+                UpdateOne({"slug": org["slug"]}, {"$set": org}, upsert=True)
+                for org in orgs
             ]
             # Add organizations to db
             db.organizations.bulk_write(org_upserts, ordered=False)
@@ -243,13 +188,11 @@ for f in os.listdir(STATES_LOCATION):
 # Get initial refresh
 gather_magazines()
 gather_articles()
-gather_flyers()
 gather_orgs()
 
 # Schedule the function to run every 10 minutes
 schedule.every(10).minutes.do(gather_articles)
 schedule.every(10).minutes.do(gather_magazines)
-schedule.every(10).minutes.do(gather_flyers)
 schedule.every(10).minutes.do(gather_orgs)
 while True:
     schedule.run_pending()
