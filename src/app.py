@@ -45,11 +45,11 @@ gc = gspread.service_account(filename=GOOGLE_SERVICE_ACCOUNT_PATH)
 if SERVER == "prod":
     google_sheet_id = PROD_GOOGLE_SHEET_ID
     org_sheet_id = PROD_ORGANIZATION_SHEET_ID
-    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).sheet2
+    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).get_worksheet(1)
 else:
     google_sheet_id = DEV_GOOGLE_SHEET_ID
     org_sheet_id = DEV_ORGANIZATION_SHEET_ID
-    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).sheet1
+    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).get_worksheet(0)
 
 sheet = gc.open_by_key(google_sheet_id).sheet1
 org_sheet = gc.open_by_key(org_sheet_id).sheet1
@@ -188,6 +188,41 @@ def gather_flyers():
 
             
     logging.info("Done gathering flyers\n")
+
+
+# Function for gathering organizations for running with scheduler
+def gather_orgs():
+    logging.info("Gathering organizations")
+    orgs = []
+    with MongoClient(MONGO_ADDRESS) as client:
+        db = client[DATABASE]
+        data = org_sheet.get_all_values()
+        len_data = len(data)
+        parse_counter = 1
+        parsed_column = 8
+        for i in range(1, len_data):
+            parsed = data[i][parsed_column] == "1"
+            data_is_empty = data[i][0] == ""
+            if not parsed and not data_is_empty:
+                plainCode, org = Organization(data[i]).serialize()
+                orgs.append(org)
+                # Update parsed to equal 1
+                org_sheet.update_cell(i + 1, parsed_column + 1, 1)
+                # Update access code sheet
+                access_code_sheet.append_row(
+                    [org["slug"], plainCode, org["accessCode"]], table_range="A:D"
+                )
+            else:
+                parse_counter += 1
+        if parse_counter < len_data:
+            org_upserts = [
+                UpdateOne({"slug": org["slug"]}, {"$set": org}, upsert=True)
+                for org in orgs
+            ]
+            # Add organizations to db
+            db.organizations.bulk_write(org_upserts, ordered=False)
+
+    logging.info("Done gathering organizations\n")
 
 
 # Function for gathering organizations for running with scheduler
