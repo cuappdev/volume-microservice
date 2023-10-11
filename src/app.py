@@ -39,6 +39,7 @@ VOLUME_NOTIFICATIONS_ENDPOINT = os.getenv("VOLUME_NOTIFICATIONS_ENDPOINT")
 GOOGLE_SERVICE_ACCOUNT_PATH = os.getenv("GOOGLE_SERVICE_ACCOUNT_PATH")
 SERVER = os.getenv("SERVER")
 
+
 # Auth into Google Service Account
 gc = gspread.service_account(filename=GOOGLE_SERVICE_ACCOUNT_PATH)
 
@@ -144,51 +145,6 @@ def gather_magazines():
                 print(e)
     logging.info("Done gathering magazines\n")
 
-# Function for gathering magazines for running with scheduler
-def gather_flyers():
-    logging.info("Gathering flyers")
-    flyers = []
-    with MongoClient(MONGO_ADDRESS) as client:
-        db = client[DATABASE]
-        data = flyer_sheet.get_all_values()
-        len_data = len(data)
-        parse_counter = 1
-        for i in range(1, len_data):
-            parsed = data[i][11] == "1"
-            data_is_empty = data[i][0] == ""
-            if not parsed and not data_is_empty:
-                slug = data[i][4]
-                o = list(filter(lambda o: o["slug"] == slug, organizations_serialized))
-                
-                o = o[0] if o else None  # Get only one organization
-                flyers.append(Flyer(data[i], o).serialize())
-                flyer_sheet.update_cell(i + 1, 12, 1)  # Updates parsed to equal 1
-            else:
-                parse_counter += 1
-        if parse_counter < len_data:
-            flyer_upserts = [
-                UpdateOne({"imageURL": f["imageURL"]}, {"$set": f}, upsert=True)
-                for f in flyers
-            ]
-            # Add flyers to db
-            result = db.flyers.bulk_write(flyer_upserts, ordered=False).upserted_ids
-
-            # Need to unwrap ObjectID objects from MongoDB into str ids
-            flyer_ids = [str(flyer) for flyer in result.values()]
-            try:
-                logging.info(f"Sending notification for {len(flyer_ids)} flyers")
-
-                requests.post(
-                    VOLUME_NOTIFICATIONS_ENDPOINT + "/flyers/",
-                    json={"flyerIDs": flyer_ids},
-                )
-            except Exception as e:
-                logging.error("Flyers unable to connect to volume-backend.")
-                print(e)
-
-            
-    logging.info("Done gathering flyers\n")
-
 
 # Function for gathering organizations for running with scheduler
 def gather_orgs():
@@ -210,42 +166,8 @@ def gather_orgs():
                 org_sheet.update_cell(i + 1, parsed_column + 1, 1)
                 # Update access code sheet
                 access_code_sheet.append_row(
-                    [org["slug"], plainCode, org["accessCode"]], table_range="A:D"
-                )
-            else:
-                parse_counter += 1
-        if parse_counter < len_data:
-            org_upserts = [
-                UpdateOne({"slug": org["slug"]}, {"$set": org}, upsert=True)
-                for org in orgs
-            ]
-            # Add organizations to db
-            db.organizations.bulk_write(org_upserts, ordered=False)
-
-    logging.info("Done gathering organizations\n")
-
-
-# Function for gathering organizations for running with scheduler
-def gather_orgs():
-    logging.info("Gathering organizations")
-    orgs = []
-    with MongoClient(MONGO_ADDRESS) as client:
-        db = client[DATABASE]
-        data = org_sheet.get_all_values()
-        len_data = len(data)
-        parse_counter = 1
-        parsed_column = 8
-        for i in range(1, len_data):
-            parsed = data[i][parsed_column] == "1"
-            data_is_empty = data[i][0] == ""
-            if not parsed and not data_is_empty:
-                plainCode, org = Organization(data[i]).serialize()
-                orgs.append(org)
-                # Update parsed to equal 1
-                org_sheet.update_cell(i + 1, parsed_column + 1, 1)
-                # Update access code sheet
-                access_code_sheet.append_row(
-                    [org["slug"], plainCode, org["accessCode"]], table_range="A:D"
+                    [org["slug"], plainCode, org["accessCode"], org["name"]],
+                    table_range="A:D",
                 )
             else:
                 parse_counter += 1
