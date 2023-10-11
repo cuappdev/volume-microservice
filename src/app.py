@@ -187,8 +187,8 @@ for f in os.listdir(STATES_LOCATION):
     os.remove(os.path.join(STATES_LOCATION, f))
 
 # Get initial refresh
-# gather_magazines()
-# gather_articles()
+gather_magazines()
+gather_articles()
 gather_orgs()
 
 # Schedule the function to run every 10 minutes
