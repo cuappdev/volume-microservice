@@ -46,11 +46,11 @@ gc = gspread.service_account(filename=GOOGLE_SERVICE_ACCOUNT_PATH)
 if SERVER == "prod":
     google_sheet_id = PROD_GOOGLE_SHEET_ID
     org_sheet_id = PROD_ORGANIZATION_SHEET_ID
-    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).sheet2
+    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).get_worksheet(1)
 else:
     google_sheet_id = DEV_GOOGLE_SHEET_ID
     org_sheet_id = DEV_ORGANIZATION_SHEET_ID
-    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).sheet1
+    access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).get_worksheet(0)
 
 sheet = gc.open_by_key(google_sheet_id).sheet1
 org_sheet = gc.open_by_key(org_sheet_id).sheet1
