@@ -166,7 +166,8 @@ def gather_orgs():
                 org_sheet.update_cell(i + 1, parsed_column + 1, 1)
                 # Update access code sheet
                 access_code_sheet.append_row(
-                    [org["slug"], plainCode, org["accessCode"]], table_range="A:D"
+                    [org["slug"], plainCode, org["accessCode"], org["name"]],
+                    table_range="A:D",
                 )
             else:
                 parse_counter += 1
@@ -186,8 +187,8 @@ for f in os.listdir(STATES_LOCATION):
     os.remove(os.path.join(STATES_LOCATION, f))
 
 # Get initial refresh
-gather_magazines()
-gather_articles()
+# gather_magazines()
+# gather_articles()
 gather_orgs()
 
 # Schedule the function to run every 10 minutes
