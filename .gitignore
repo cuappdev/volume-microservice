@@ -141,3 +141,4 @@ dmypy.json
 
 # secrets
 secrets/
+*service-account-credentials.json
