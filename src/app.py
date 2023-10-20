@@ -22,7 +22,6 @@ from organization import Organization
 from publication import Publication
 from pymongo import MongoClient, UpdateOne
 
-
 # set base config of logger to log timestamps and info level
 logging.basicConfig(
     format="%(asctime)s %(levelname)-8s %(message)s",
@@ -30,7 +29,7 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
-with open("../publications.json") as f:
+with open("publications.json") as f:
     publications_json = json.load(f)["publications"]
     publications = [Publication(p) for p in publications_json]
 
@@ -127,7 +126,6 @@ def gather_magazines():
                 p = p[0] if p else None  # Get only one publication
                 magazines.append(Magazine(data[i], p).serialize())
                 mag_sheet.update_cell(i + 1, 8, 1)  # Updates parsed to equal 1
-                logging.info("Updated parsed cell")
             else:
                 parse_counter += 1
         if parse_counter < len_data:
@@ -140,18 +138,18 @@ def gather_magazines():
                 magazine_upserts, ordered=False
             ).upserted_ids
             # Need to unwrap ObjectID objects from MongoDB into str ids
-            # magazine_ids = [str(magazine) for magazine in result.values()]
-            # try:
-            #     logging.info(
-            #         f"Sending notification for {len(magazine_ids)} magazines")
+            magazine_ids = [str(magazine) for magazine in result.values()]
+            try:
+                logging.info(
+                    f"Sending notification for {len(magazine_ids)} magazines")
 
-            #     requests.post(
-            #         VOLUME_NOTIFICATIONS_ENDPOINT + "/magazines/",
-            #         json={"magazineIDs": magazine_ids},
-            #     )
-            # except Exception as e:
-            #     logging.error("Magazines unable to connect to volume-backend.")
-            #     print(e)
+                requests.post(
+                    VOLUME_NOTIFICATIONS_ENDPOINT + "/magazines/",
+                    json={"magazineIDs": magazine_ids},
+                )
+            except Exception as e:
+                logging.error("Magazines unable to connect to volume-backend.")
+                print(e)
     logging.info("Done gathering magazines\n")
 
 
@@ -197,13 +195,13 @@ for f in os.listdir(STATES_LOCATION):
 
 # Get initial refresh
 gather_magazines()
-# gather_articles()
-# gather_orgs()
+gather_articles()
+gather_orgs()
 
 # Schedule the function to run every 10 minutes
-# schedule.every(10).minutes.do(gather_articles)
+schedule.every(10).minutes.do(gather_articles)
 schedule.every(10).minutes.do(gather_magazines)
-# schedule.every(1).minutes.do(gather_orgs)
+schedule.every(1).minutes.do(gather_orgs)
 while True:
     schedule.run_pending()
     time.sleep(60)
