@@ -8,8 +8,11 @@ DEV_ORGANIZATION_SHEET_ID = "16SkOHHUSWX1SnqDU3RldpXZSCyWO0r0LANKWi-wXpYA"
 PROD_ORGANIZATION_SHEET_ID = "1Zc-emlxnMhqqr4eZapU-19fWC541TqaG4UntX2EWF2Q"
 ACCESS_CODE_SHEET_ID = "16gY0NJvEaHH_i6iubnJcwsw_uFgFWjOY7bbQDbP0jCI"
 IMAGE_ADDRESS = "https://raw.githubusercontent.com/cuappdev/assets/master/volume"
-STATES_LOCATION = "./.states/"
+STATES_LOCATION = "../.states/"
 PLACEHOLDER_IMAGE_ADDRESS = (
     "https://raw.githubusercontent.com/cuappdev/assets/master/volume/placeholders/"
 )
 UPLOAD_BUCKET = "volume"
+
+DEV_MAGAZINE_SHEET_ID = "1kJ2SSPFPltF7uVwf1Ml7xVGRB_ZS_jn9-xdXYjwCrOo"
+PROD_MAGAZINE_SHEET_ID = ""

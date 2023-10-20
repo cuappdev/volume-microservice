@@ -9,8 +9,10 @@ import time
 from article import Article
 from constants import (
     ACCESS_CODE_SHEET_ID,
+    DEV_MAGAZINE_SHEET_ID,
     DEV_ORGANIZATION_SHEET_ID,
     DEV_GOOGLE_SHEET_ID,
+    PROD_MAGAZINE_SHEET_ID,
     PROD_ORGANIZATION_SHEET_ID,
     PROD_GOOGLE_SHEET_ID,
     STATES_LOCATION,
@@ -28,7 +30,7 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
-with open("publications.json") as f:
+with open("../publications.json") as f:
     publications_json = json.load(f)["publications"]
     publications = [Publication(p) for p in publications_json]
 
@@ -45,14 +47,17 @@ gc = gspread.service_account(filename=GOOGLE_SERVICE_ACCOUNT_PATH)
 
 if SERVER == "prod":
     google_sheet_id = PROD_GOOGLE_SHEET_ID
+    mag_sheet_id = PROD_MAGAZINE_SHEET_ID
     org_sheet_id = PROD_ORGANIZATION_SHEET_ID
     access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).get_worksheet(1)
 else:
     google_sheet_id = DEV_GOOGLE_SHEET_ID
+    mag_sheet_id = DEV_MAGAZINE_SHEET_ID
     org_sheet_id = DEV_ORGANIZATION_SHEET_ID
     access_code_sheet = gc.open_by_key(ACCESS_CODE_SHEET_ID).get_worksheet(0)
 
 sheet = gc.open_by_key(google_sheet_id).sheet1
+mag_sheet = gc.open_by_key(mag_sheet_id).sheet1
 org_sheet = gc.open_by_key(org_sheet_id).sheet1
 
 
@@ -85,12 +90,14 @@ def gather_articles():
     # Add articles to db
     with MongoClient(MONGO_ADDRESS) as client:
         db = client[DATABASE]
-        result = db.articles.bulk_write(article_upserts, ordered=False).upserted_ids
+        result = db.articles.bulk_write(
+            article_upserts, ordered=False).upserted_ids
         # Need to unwrap ObjectID objects from MongoDB into str ids
         article_ids = [str(article) for article in result.values()]
         if article_ids:
             try:
-                logging.info(f"Sending notification for {len(article_ids)} articles")
+                logging.info(
+                    f"Sending notification for {len(article_ids)} articles")
                 requests.post(
                     VOLUME_NOTIFICATIONS_ENDPOINT + "/articles/",
                     json={"articleIDs": article_ids},
@@ -107,7 +114,7 @@ def gather_magazines():
     magazines = []
     with MongoClient(MONGO_ADDRESS) as client:
         db = client[DATABASE]
-        data = sheet.get_all_values()
+        data = mag_sheet.get_all_values()
         len_data = len(data)
         parse_counter = 1
         for i in range(1, len_data):
@@ -115,10 +122,12 @@ def gather_magazines():
             data_is_empty = data[i][0] == ""
             if not parsed and not data_is_empty:
                 slug = data[i][2]
-                p = list(filter(lambda p: p["slug"] == slug, publications_serialized))
+                p = list(filter(lambda p: p["slug"]
+                         == slug, publications_serialized))
                 p = p[0] if p else None  # Get only one publication
                 magazines.append(Magazine(data[i], p).serialize())
-                sheet.update_cell(i + 1, 8, 1)  # Updates parsed to equal 1
+                mag_sheet.update_cell(i + 1, 8, 1)  # Updates parsed to equal 1
+                logging.info("Updated parsed cell")
             else:
                 parse_counter += 1
         if parse_counter < len_data:
@@ -130,19 +139,19 @@ def gather_magazines():
             result = db.magazines.bulk_write(
                 magazine_upserts, ordered=False
             ).upserted_ids
-
             # Need to unwrap ObjectID objects from MongoDB into str ids
-            magazine_ids = [str(magazine) for magazine in result.values()]
-            try:
-                logging.info(f"Sending notification for {len(magazine_ids)} magazines")
+            # magazine_ids = [str(magazine) for magazine in result.values()]
+            # try:
+            #     logging.info(
+            #         f"Sending notification for {len(magazine_ids)} magazines")
 
-                requests.post(
-                    VOLUME_NOTIFICATIONS_ENDPOINT + "/magazines/",
-                    json={"magazineIDs": magazine_ids},
-                )
-            except Exception as e:
-                logging.error("Magazines unable to connect to volume-backend.")
-                print(e)
+            #     requests.post(
+            #         VOLUME_NOTIFICATIONS_ENDPOINT + "/magazines/",
+            #         json={"magazineIDs": magazine_ids},
+            #     )
+            # except Exception as e:
+            #     logging.error("Magazines unable to connect to volume-backend.")
+            #     print(e)
     logging.info("Done gathering magazines\n")
 
 
@@ -188,13 +197,13 @@ for f in os.listdir(STATES_LOCATION):
 
 # Get initial refresh
 gather_magazines()
-gather_articles()
-gather_orgs()
+# gather_articles()
+# gather_orgs()
 
 # Schedule the function to run every 10 minutes
-schedule.every(10).minutes.do(gather_articles)
+# schedule.every(10).minutes.do(gather_articles)
 schedule.every(10).minutes.do(gather_magazines)
-schedule.every(1).minutes.do(gather_orgs)
+# schedule.every(1).minutes.do(gather_orgs)
 while True:
     schedule.run_pending()
     time.sleep(60)

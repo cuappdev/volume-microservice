@@ -6,6 +6,7 @@ from dateutil import parser as date_parser
 import json
 import utils
 
+
 class Magazine:
     def __init__(self, sheet_row, publication):
         pf.load_censor_words(FILTERED_WORDS)
@@ -13,7 +14,8 @@ class Magazine:
         self.slug = sheet_row[2]
         self.title = sheet_row[3]
         self.drive_link = sheet_row[4]
-        self.file_id = self.drive_link[self.drive_link.index("id=") + 3 :]
+        self.file_id = self.drive_link[self.drive_link.index(
+            "d/") + 2: self.drive_link.index("/view")]
         self.date_pub = sheet_row[5]
         self.semester = sheet_row[6].lower()
         self.publication = publication
@@ -26,7 +28,7 @@ class Magazine:
         pdf_response = json.loads(utils.download_pdf(pdf_bytes))
         image_response = json.loads(utils.download_image_from_pdf(pdf_bytes))
         if pdf_response["success"] and image_response["success"]:
-            return { 
+            return {
                 "date": self.get_date(self.timestamp),
                 "published": self.date_pub,
                 "semester": self.semester,
