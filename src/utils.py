@@ -62,11 +62,6 @@ def download_image_from_pdf(file):
     """
     The response from AppDev's upload service containing the url to:
     the png content of the first page of the pdf in BytesIO object <file>.
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> main
     Requires: file is a BytesIO object with data to a valid pdf file.
     """
     pdf = pdfium.PdfDocument(file)
