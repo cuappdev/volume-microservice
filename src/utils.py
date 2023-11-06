@@ -12,10 +12,11 @@ import os
 import requests
 import pypdfium2 as pdfium
 
+
 def download_bytes(self):
     """
     Returns the BytesIO object of the media contained in self.file_id
-    
+
     Returns None if unable to download the content.
     """
     creds = service_account.Credentials.from_service_account_file(
@@ -38,10 +39,11 @@ def download_bytes(self):
         file = None
     return file
 
+
 def download_pdf(file):
     """
     The response from AppDev's upload service containing the url to the pdf content in BytesIO object <file>
-    
+
     Requires: file is a BytesIO object with data to a valid pdf file.
     """
     payload = json.dumps(
@@ -60,16 +62,20 @@ def download_image_from_pdf(file):
     """
     The response from AppDev's upload service containing the url to:
     the png content of the first page of the pdf in BytesIO object <file>.
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> main
     Requires: file is a BytesIO object with data to a valid pdf file.
     """
     pdf = pdfium.PdfDocument(file)
     first_page = pdf[0]
-    pil_image = first_page.render().to_pil().resize((150,220))
+    pil_image = first_page.render().to_pil().resize((150, 220))
 
-    imageBytes = io.BytesIO() #create bytes stream to hold image
+    imageBytes = io.BytesIO()  # create bytes stream to hold image
     pil_image.save(imageBytes, format='png')
-    
+
     image_payload = json.dumps({
         "bucket": UPLOAD_BUCKET,
         "image": "data:image/png;base64,"
